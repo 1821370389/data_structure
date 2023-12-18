@@ -312,3 +312,28 @@ int dynamicArrayGetCapacity(dynamicArray *pArray, int *pCapacity)
 
     return SUCCESS;
 }
+
+/* 获取指定位置的元素数据 */
+int dynamicArrayGetAppointPosData(dynamicArray *pArray, int pos, ElemType *pValue)
+{
+    int ret = 0;
+    /* 判断指针是否为空 */
+    if(pArray == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    /* 判断位置的合法性 */
+    if(pos < 0 || pos > pArray->size)
+    {
+        return ILLEGAL_ACCESS;
+    }
+
+    if(pValue != NULL)
+    {
+        *pValue = pArray->data[pos];
+    }
+    
+    return SUCCESS;
+
+}
