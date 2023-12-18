@@ -68,7 +68,7 @@ static int dynamicArrayExpand(dynamicArray *pArray)
     pArray->data = (ElemType *)realloc(pArray->data, sizeof(ElemType) * needExpandCapacity);
 #else
     /* 创建临时指针 */
-    int *temPtr = pArray->data;
+    ElemType *temPtr = pArray->data;
 
     /* 开辟新空间 */
     pArray->data = (ElemType *)malloc(sizeof(ElemType) * needExpandCapacity);
@@ -172,7 +172,7 @@ static int dynamicArrayShrink(dynamicArray *pArray)
     int needShrinkCapacity = pArray->capacity >> 1;
 
     /* 创建临时指针备份旧数组头地址 */
-    int *temPtr = pArray->data;
+    ElemType *temPtr = pArray->data;
 
     /* 开辟新空间 */
     pArray->data = (ElemType *)malloc(sizeof(ElemType) * needShrinkCapacity);

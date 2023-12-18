@@ -1,7 +1,9 @@
 #ifndef __DYNAMIC_ARRAY_H__
 #define __DYNAMIC_ARRAY_H__
 /* 避免头文件重命名*/
-typedef int ElemType;
+
+// #define ElemType void*
+typedef void * ElemType;
 typedef struct dynamicArray
 {
     ElemType *data; /* 数组的空间*/
