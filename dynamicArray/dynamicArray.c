@@ -261,6 +261,18 @@ int dynamicArrayDeleteAppointData(dynamicArray *pArray, ElemType value)
 /* 动态数组的销毁 */
 int dynamicArrayDestroy(dynamicArray *pArray)
 {
+    /* 判断指针是否为空 */
+    if(pArray == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    /* 释放动态数组的内存 */
+    if(pArray->data != NULL)
+    {
+        free(pArray->data);
+        pArray->data = NULL;
+    }
 
     return SUCCESS;
 }
@@ -268,6 +280,17 @@ int dynamicArrayDestroy(dynamicArray *pArray)
 /* 获取动态数组的大小 */
 int dynamicArrayGetSize(dynamicArray *pArray, int *pSize)
 {
+    /* 判断指针是否为空 */
+    if(pArray == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    /* 解引用 */
+    if(pSize != NULL)
+    {
+        *pSize = pArray->size;
+    }
 
     return SUCCESS;
 }
@@ -275,6 +298,17 @@ int dynamicArrayGetSize(dynamicArray *pArray, int *pSize)
 /* 获取动态数组的容量 */
 int dynamicArrayGetCapacity(dynamicArray *pArray, int *pCapacity)
 {
+    /* 判断指针是否为空 */
+    if(pArray == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    /* 解引用 */
+    if(pCapacity != NULL)
+    {
+        *pCapacity = pArray->capacity;
+    }
 
     return SUCCESS;
 }
