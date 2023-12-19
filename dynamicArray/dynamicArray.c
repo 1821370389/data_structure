@@ -20,21 +20,43 @@ enum STATUS_CODE
 static int dynamicArrayExpand(dynamicArray *pArray);
 static int dynamicArrayShrink(dynamicArray *pArray);
 
+/* 检查指针是否为空的宏函数 */
+#define CHECK_NULL_POINTER(ptr) \
+    do \
+    { \
+        if(ptr == NULL) \
+        { \
+            return NULL_PTR; \
+        }\
+    } while(0)  
+/* 避免传入非法值 */
+#define CHECK_ILLEGAL_ACCESS(index) \
+    do \
+    { \
+        if(index <= 0 ) \
+        { \
+            return ILLEGAL_ACCESS; \
+        } \
+    } while(0)
+/* 判断位置的合法性 */
+#define CHECK_POSITION(index, pArray) \
+    do \
+    { \
+        if(index < 0 || index > pArray->size) \
+        { \
+            return ILLEGAL_ACCESS; \
+        } \
+    } while(0)
+
 
 /* 动态数组初始化 */
 int dynamicArrayInit(dynamicArray *pArray, int capacity)
 {
     /* 判断指针是否为空 */
-    if(pArray == NULL)
-    {
-        return NULL_PTR;
-    }
+    CHECK_NULL_POINTER(pArray);
 
     /* 避免传入非法值 */
-    if(capacity <= 0)
-    {
-        capacity = DEFAULT_SIZE;
-    }
+    CHECK_ILLEGAL_ACCESS(capacity);
 
     /* 为动态数组分配内存 */
     pArray->data = (ElemType *)malloc(sizeof(ElemType) * capacity);
@@ -106,16 +128,10 @@ static int dynamicArrayExpand(dynamicArray *pArray)
 int dynamicArrayAppointPosInsertData(dynamicArray *pArray, ElemType value, int pos)
 {
     /* 判断指针是否为空 */
-    if(pArray == NULL)
-    {
-        return NULL_PTR;
-    }
+    CHECK_NULL_POINTER(pArray);
 
     /* 判断位置的合法性 */
-    if(pos < 0 || pos > pArray->size)
-    {
-        return ILLEGAL_ACCESS;
-    }
+    CHECK_POSITION(pos, pArray);
     
     /* 判断是否需要扩容,(到上线2/3时就扩容) */
     if((pArray->size + (pArray->size >> 1)) >= pArray->capacity)
@@ -140,10 +156,7 @@ int dynamicArrayAppointPosInsertData(dynamicArray *pArray, ElemType value, int p
 int dynamicArrayModifyAppointPosData(dynamicArray *pArray, ElemType value, int pos)
 {
     /* 判断指针是否为空 */
-    if(pArray == NULL)
-    {
-        return NULL_PTR;
-    }
+    CHECK_NULL_POINTER(pArray);
 
     /* 判断位置的合法性 */
     if(pos < 0 || pos >= pArray->size)
@@ -209,19 +222,13 @@ static int dynamicArrayShrink(dynamicArray *pArray)
 int dynamicArrayDeleteAppointPosData(dynamicArray *pArray, int pos)
 {
     /* 判断指针是否为空 */
-    if(pArray == NULL)
-    {
-        return NULL_PTR;
-    }
+    CHECK_NULL_POINTER(pArray);
 
     /* 判断位置的合法性 */
-    if(pos < 0 || pos > pArray->size)
-    {
-        return ILLEGAL_ACCESS;
-    }
+    CHECK_POSITION(pos, pArray);
 
     /* 判断是否需要缩容 */
-    if((pArray->capacity >> 1) < pArray->size)
+    if((pArray->capacity >> 1) > pArray->size)
     {
         dynamicArrayShrink(pArray);
     }
@@ -242,14 +249,11 @@ int dynamicArrayDeleteAppointPosData(dynamicArray *pArray, int pos)
 int dynamicArrayDeleteAppointData(dynamicArray *pArray, ElemType value)
 {
     /* 判断指针是否为空 */
-    if(pArray == NULL)
-    {
-        return NULL_PTR;
-    }
+    CHECK_NULL_POINTER(pArray);
 
     for(int idx = pArray->size - 1; idx >= 0; idx--)
     {
-        if(pArray->data[idx] == value)
+        if(*(char*)pArray->data[idx] == *(char*)value)
         {
             dynamicArrayDeleteAppointPosData(pArray, idx);
         }
@@ -262,10 +266,7 @@ int dynamicArrayDeleteAppointData(dynamicArray *pArray, ElemType value)
 int dynamicArrayDestroy(dynamicArray *pArray)
 {
     /* 判断指针是否为空 */
-    if(pArray == NULL)
-    {
-        return NULL_PTR;
-    }
+    CHECK_NULL_POINTER(pArray);
 
     /* 释放动态数组的内存 */
     if(pArray->data != NULL)
@@ -281,10 +282,7 @@ int dynamicArrayDestroy(dynamicArray *pArray)
 int dynamicArrayGetSize(dynamicArray *pArray, int *pSize)
 {
     /* 判断指针是否为空 */
-    if(pArray == NULL)
-    {
-        return NULL_PTR;
-    }
+    CHECK_NULL_POINTER(pArray);
 
     /* 解引用 */
     if(pSize != NULL)
@@ -295,14 +293,14 @@ int dynamicArrayGetSize(dynamicArray *pArray, int *pSize)
     return SUCCESS;
 }
 
+
+
+
 /* 获取动态数组的容量 */
 int dynamicArrayGetCapacity(dynamicArray *pArray, int *pCapacity)
 {
     /* 判断指针是否为空 */
-    if(pArray == NULL)
-    {
-        return NULL_PTR;
-    }
+    CHECK_NULL_POINTER(pArray);
 
     /* 解引用 */
     if(pCapacity != NULL)
@@ -318,20 +316,14 @@ int dynamicArrayGetAppointPosData(dynamicArray *pArray, int pos, ElemType *pValu
 {
     int ret = 0;
     /* 判断指针是否为空 */
-    if(pArray == NULL)
-    {
-        return NULL_PTR;
-    }
+    CHECK_NULL_POINTER(pArray);
 
     /* 判断位置的合法性 */
-    if(pos < 0 || pos > pArray->size)
-    {
-        return ILLEGAL_ACCESS;
-    }
+    CHECK_POSITION(pos, pArray);
 
     if(pValue != NULL)
     {
-        *pValue = pArray->data[pos];
+        memcpy(pValue, *(pArray->data + pos), sizeof(ElemType));
     }
     
     return SUCCESS;

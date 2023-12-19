@@ -2,10 +2,11 @@
 #include <stdio.h>
 #include "dynamicArray.h"
 #include <string.h>
+#include <stdlib.h>
 
 
 #define BUFFER_SIZE 7
-#define DEFAULT_NUM 3
+#define DEFAULT_NUM 5
 
 typedef struct stuInfo
 {
@@ -13,6 +14,14 @@ typedef struct stuInfo
     char sex;
 } stuInfo;
 
+/* 打印数组 */
+void printArray(dynamicArray * array)
+{
+    for(int idx = 0; idx < array->size; idx++)
+    {
+        printf("data = %d\n", *(int *)(array->data[idx]));
+    }
+}
 
 int main()
 {
@@ -23,45 +32,61 @@ int main()
     /*动态数组*/
     dynamicArray array;
     dynamicArrayInit(&array, BUFFER_SIZE);
-#if 0
+    // free(array.data);
+    // dynamicArrayInit(&array, BUFFER_SIZE);
+#if 1
     /* 插入数据*/
+    
+    int buffer[DEFAULT_NUM] = {1, 2, 3, 2, 5};
+    for(int idx = 0; idx < DEFAULT_NUM; idx++)
     {
-        dynamicArrayInsertData(&array, 3);
-        for(int idx = 1; idx <= DEFAULT_NUM; idx++)
-        {
-            dynamicArrayInsertData(&array, 21);
-        }
+        dynamicArrayInsertData(&array, (void *)&buffer[idx]);
     }
 
-    {
-        /* 获取动态数组的大小 */
-        int size = 0;
-        dynamicArrayGetSize(&array,&size);
-        printf("size = %d\n", size);
-    }
+    /* 获取动态数组的大小 */
+    int size = 0;
+    int capacity = 0;
+    int temp = 5;
+    dynamicArrayGetSize(&array,&size);
+    dynamicArrayGetCapacity(&array, &capacity);
+    printf("size = %d\n", size);
+    printf("capacity = %d\n", capacity);
 
     /* 打印数组 */
-    for(int idx = 0; idx < size; idx++)
-    {
-        int data = 0;
-        dynamicArrayGetAppointPosData(&array, idx, &data);
-        printf("data = %d\n", data);
-    }
-
+    printArray(&array);
+    printf("\n");
+    #if 0
     /* 删除数据*/
     dynamicArrayDeleteData(&array);
-
-    dynamicArrayGetSize(&array,&size);
+    #elif 0
+    
+    /* 删除特定位置数据*/
+    dynamicArrayDeleteAppointPosData(&array,1);
+    #elif 1
+    /* 删除指定数据 */
+    dynamicArrayDeleteAppointData(&array, (void *)&buffer[3]);
+    #elif 0
+    /* 在指定位置插入数据 */
+    dynamicArrayAppointPosInsertData(&array,(void*)&buffer[4],2);
+    #elif 0
+    /* 修改指定位置的数据 */
+    dynamicArrayModifyAppointPosData(&array,(void*)&temp,2);
     /* 获取动态数组的大小 */
-    printf("size = %d\n", size);
-
+    printf("array.size = %d\n", array.size);
+    printf("array.capacity = %d\n", array.capacity);
+    #elif 0
+    /* 获取指定位置的数据 */
+    dynamicArrayGetAppointPosData(&array,3,(ElemType)&temp);
+    printf("temp = %d\n", temp);
+    #elif 0
+    /* 销毁数组*/
+    temp = dynamicArrayDestroy(&array);
+    printf("temp = %d\n", temp);
+    // printArray(&array);
+    #endif
     /* 打印数组 */
-    for(int idx = 0; idx < size; idx++)
-    {
-        int data = 0;
-        dynamicArrayGetAppointPosData(&array, idx, &data);
-        printf("data = %d\n", data);
-    }
+    printArray(&array);
+
 #elif 0
     int buffer[DEFAULT_NUM] = {1,2,3};
     for(int idx = 0; idx < DEFAULT_NUM; idx++)
