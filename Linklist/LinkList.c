@@ -177,10 +177,38 @@ int LinkListDelete(LinkList *pList, int pos)
     return SUCCESS;
 }
 
+/* 静态函数只给本源文件的的函数使用，不需要判断参数合法性 */
+/* 链表查找指定数据位置 */
+static int LinkListFind(LinkList *pList, ELEMENTTYPE data, int *pPos)
+{
+    LinkNode *travelNode = pList->head->next;
+    int pos = 1;
+    while(travelNode->data)
+    {
+        if(travelNode->data == data)
+        {
+            *pPos = pos;
+            return pos;
+        }
+        pos++;
+        travelNode = travelNode->next;
+    }
+
+    return UNDERFLOW;
+}
+
 /* 链表指定值删除 */
 int LinkListDeleteByValue(LinkList *pList, ELEMENTTYPE data)
 {
-    
+
+    int pos = 0;
+    int len = 0;
+    while(LinkListLen(pList, &len) && pos != UNDERFLOW)
+    {
+        LinkListDelete(pList, LinkListFind(pList, data, &pos));
+
+    }
+    return SUCCESS;
 }
 
 /* 获取链表长度 */
