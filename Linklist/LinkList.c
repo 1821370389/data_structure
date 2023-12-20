@@ -15,6 +15,26 @@ enum STATUS_CODE
 };
 
 
+/* 检查指针是否为空的宏函数 */
+#define CHECK_NULL_POINTER(ptr) \
+    do \
+    { \
+        if(ptr == NULL) \
+        { \
+            return NULL_PTR; \
+        }\
+    } while(0)  
+/* 判断位置的合法性 */
+#define CHECK_POSITION(index, pArray) \
+    do \
+    { \
+        if(index < 0 || index > pArray->len) \
+        { \
+            return ILLEGAL_ACCESS; \
+        } \
+    } while(0)
+
+
 /* 链表的初始化 */
 int LinkListInit(LinkList **pList)
 {
@@ -48,19 +68,45 @@ int LinkListInit(LinkList **pList)
 /* 链表头插 */
 int LinkListHeadInsert(LinkList *pList, ELEMENTTYPE data)
 {
-    
+    return LinkListInsert(pList, 0, data);
 }
 
 /* 链表尾插 */
 int LinkListTailInsert(LinkList *pList, ELEMENTTYPE data)
 {
-    
+    return LinkListInsert(pList, pList->len, data);
 }
 
 /* 链表指定位置插入 */
 int LinkListInsert(LinkList *pList, int pos, ELEMENTTYPE data)
 {
-    
+    /* 判空 */
+    CHECK_NULL_POINTER(pList);
+    /* 判断位置合法性 */
+    CHECK_POSITION(pos, pList);
+
+    /* 封装结点 */
+    LinkNode *newNode = (LinkNode *)malloc(sizeof(LinkNode));
+    if(newNode == NULL)
+    {
+        return MALLOC_ERROR;
+    }
+    /* 清除脏数据 */
+    memset(newNode, 0, sizeof(LinkNode));
+
+    /* 从虚拟头结点开始遍历*/
+    LinkNode *traveNode = pList->head;
+    while(pos--)
+    {
+        traveNode = traveNode->next;
+    }
+    /* 修改结点指向 */
+    newNode->next = traveNode->next;
+    traveNode->next = newNode;
+
+    /* 更新链表长度 */
+    pList->len++;
+    return SUCCESS;
 }
 
 /* 链表头删 */
@@ -90,7 +136,14 @@ int LinkListDeleteByValue(LinkList *pList, ELEMENTTYPE data)
 /* 获取链表长度 */
 int LinkListLen(LinkList *pList, int *pLen)
 {
-    
+    /* 判空 */
+    CHECK_NULL_POINTER(pList);
+
+    if(pLen)
+    {
+        *pLen = pList->len;
+    }
+    return SUCCESS;
 }
 
 /* 获取链表指定位置的值 */
@@ -108,5 +161,6 @@ int LinkListDestroy(LinkList *pList)
 /* 链表遍历 */
 int LinkListTraverse(LinkList *pList)
 {
-
+    /* 判空 */
+    CHECK_NULL_POINTER(pList);
 }
