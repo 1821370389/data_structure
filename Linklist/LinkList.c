@@ -33,7 +33,16 @@ enum STATUS_CODE
             return ILLEGAL_ACCESS; \
         } \
     } while(0)
-
+/* 释放结点内存 */
+#define FREE_NODE(node) \
+    do \
+    { \
+        if(node != NULL) \
+        { \
+            free(node); \
+            node = NULL; \
+        } \
+    } while(0)
 
 /* 链表的初始化 */
 int LinkListInit(LinkList **pList)
@@ -108,9 +117,12 @@ int LinkListInsert(LinkList *pList, int pos, ELEMENTTYPE data)
         travelNode = pList->tail;
         flag = 1;
     }
-    while(pos--)
+    else
     {
-        travelNode = travelNode->next;
+        while(pos--)
+        {
+            travelNode = travelNode->next;
+        }
     }
     /* 修改结点指向 */
     newNode->next = travelNode->next;
@@ -131,19 +143,38 @@ int LinkListInsert(LinkList *pList, int pos, ELEMENTTYPE data)
 /* 链表头删 */
 int LinkListHeadDelete(LinkList *pList)
 {
-    
+    return LinkListDelete(pList, 1);
 }
 
 /* 链表尾删 */
 int LinkListTailDelete(LinkList *pList)
 {
-    
+    return LinkListDelete(pList, pList->len);
 }
 
 /* 链表指定位置删除 */
 int LinkListDelete(LinkList *pList, int pos)
 {
-    
+    /* 判空 */
+    CHECK_NULL_POINTER(pList);
+    /* 判断位置合法性 */
+    CHECK_POSITION(pos, pList);
+
+    LinkNode *travelNode = pList->head;
+    /* 从虚拟头结点开始遍历*/
+    while(--pos)
+    {
+        travelNode = travelNode->next;
+    }
+    /* 修改结点指向 */
+    LinkNode *delNode = travelNode->next;
+    travelNode->next = delNode->next;
+    /* 释放结点内存 */
+    FREE_NODE(delNode);
+
+    /* 更新链表长度 */
+    pList->len--;
+    return SUCCESS;
 }
 
 /* 链表指定值删除 */
