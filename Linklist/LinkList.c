@@ -1,7 +1,7 @@
 #include "LinkList.h"
 #include <stdlib.h>
 #include <string.h>
-
+#include <stdio.h>
 
 /* 状态码 */
 enum STATUS_CODE
@@ -72,7 +72,7 @@ int LinkListInit(LinkList **pList)
     list->len = 0;
 
     /* 二级指针 */
-    *pList = &list;
+    *pList = list;
     
     return SUCCESS;
 }
@@ -127,6 +127,7 @@ int LinkListInsert(LinkList *pList, int pos, ELEMENTTYPE data)
     /* 修改结点指向 */
     newNode->next = travelNode->next;
     travelNode->next = newNode;
+    newNode->data = data;
     if(flag)
     {
         /* 修改尾指针 */
@@ -155,11 +156,17 @@ int LinkListTailDelete(LinkList *pList)
 /* 链表指定位置删除 */
 int LinkListDelete(LinkList *pList, int pos)
 {
+    int flag = 0;
     /* 判空 */
     CHECK_NULL_POINTER(pList);
     /* 判断位置合法性 */
     CHECK_POSITION(pos, pList);
 
+    /* 需要修改尾指针 */
+    if(pos == pList->len)
+    {
+        flag = 1;
+    }
     LinkNode *travelNode = pList->head;
     /* 从虚拟头结点开始遍历*/
     while(--pos)
@@ -169,6 +176,12 @@ int LinkListDelete(LinkList *pList, int pos)
     /* 修改结点指向 */
     LinkNode *delNode = travelNode->next;
     travelNode->next = delNode->next;
+
+    if(flag)
+    {
+        pList->tail = travelNode;
+    }
+
     /* 释放结点内存 */
     FREE_NODE(delNode);
 
@@ -248,7 +261,7 @@ int LinkListDestroy(LinkList *pList)
 }
 
 /* 链表遍历 */
-int LinkListTraverse(LinkList *pList)
+int LinkListTraverse(LinkList *pList,int (*printfFunc)(ELEMENTTYPE))
 {
     /* 判空 */
     CHECK_NULL_POINTER(pList);
@@ -258,8 +271,13 @@ int LinkListTraverse(LinkList *pList)
     /* travelNode 指向第一个结点 */
     while(travelNode)
     {
+        #if 0 
+        printf("%d ", *(int *)travelNode->data);
+        #else
+        /* 包装器/钩子/回调函数 */
+        printfFunc(travelNode->data);
+        #endif
         travelNode = travelNode->next;
-        printf("%d ", travelNode->data);
     }
     printf("\n");
 #else

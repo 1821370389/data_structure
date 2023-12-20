@@ -1,7 +1,7 @@
 #ifndef __LINKLIST_H__
 #define __LINKLIST_H__
 
-#define ELEMENTTYPE int
+#define ELEMENTTYPE void*
 
 
 /* 链表结点 */
@@ -9,7 +9,7 @@ typedef struct LinkNode
 {
     ELEMENTTYPE data;
     /* 指向下一个结点的指针 */
-    LinkNode *next; 
+    struct LinkNode *next; 
     /* 为什么指针的类型是结点 */
 }   LinkNode;
 
@@ -63,6 +63,6 @@ int LinkListGet(LinkList *pList, int pos, ELEMENTTYPE *data);
 int LinkListDestroy(LinkList *pList);
 
 /* 链表遍历 */
-int LinkListTraverse(LinkList *pList);
+int LinkListTraverse(LinkList *pList,int (*printfFunc)(ELEMENTTYPE));
 
 #endif
