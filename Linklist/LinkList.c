@@ -56,6 +56,9 @@ int LinkListInit(LinkList **pList)
     list->head->data = 0;
     list->head->next = NULL;
 
+    /* 初始化时尾指针 = 头指针*/
+    list->tail = list->head;
+
     /* 链表的长度为0 */
     list->len = 0;
 
@@ -96,6 +99,15 @@ int LinkListInsert(LinkList *pList, int pos, ELEMENTTYPE data)
 
     /* 从虚拟头结点开始遍历*/
     LinkNode *travelNode = pList->head;
+
+    int flag = 0;
+    /* 这种情况下需要更改尾指针*/
+    if(pos == pList->len)
+    {
+        /* 修改结点指向 */
+        travelNode = pList->tail;
+        flag = 1;
+    }
     while(pos--)
     {
         travelNode = travelNode->next;
@@ -103,6 +115,13 @@ int LinkListInsert(LinkList *pList, int pos, ELEMENTTYPE data)
     /* 修改结点指向 */
     newNode->next = travelNode->next;
     travelNode->next = newNode;
+    if(flag)
+    {
+        /* 修改尾指针 */
+        pList->tail = newNode;
+    }
+
+
 
     /* 更新链表长度 */
     pList->len++;

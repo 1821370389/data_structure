@@ -22,6 +22,8 @@ typedef struct LinkList
     */
     LinkNode *head;
 
+    LinkNode *tail;
+
     /* 链表的长度 */
     int len;
 
