@@ -95,14 +95,14 @@ int LinkListInsert(LinkList *pList, int pos, ELEMENTTYPE data)
     memset(newNode, 0, sizeof(LinkNode));
 
     /* 从虚拟头结点开始遍历*/
-    LinkNode *traveNode = pList->head;
+    LinkNode *travelNode = pList->head;
     while(pos--)
     {
-        traveNode = traveNode->next;
+        travelNode = travelNode->next;
     }
     /* 修改结点指向 */
-    newNode->next = traveNode->next;
-    traveNode->next = newNode;
+    newNode->next = travelNode->next;
+    travelNode->next = newNode;
 
     /* 更新链表长度 */
     pList->len++;
@@ -163,4 +163,26 @@ int LinkListTraverse(LinkList *pList)
 {
     /* 判空 */
     CHECK_NULL_POINTER(pList);
+#if 1
+    /* 遍历 */
+    LinkNode *travelNode = pList->head->next;
+    /* travelNode 指向第一个结点 */
+    while(travelNode)
+    {
+        travelNode = travelNode->next;
+        printf("%d ", travelNode->data);
+    }
+    printf("\n");
+#else
+    /* 遍历 */
+    LinkNode *travelNode = pList->head;
+    /* travelNode 虚拟头结点 */
+    while(travelNode->next)
+    {
+        travelNode = travelNode->next;
+        printf("%d ", travelNode->data);
+    }
+    printf("\n");
+#endif
+    return SUCCESS;
 }
