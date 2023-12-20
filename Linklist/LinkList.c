@@ -193,7 +193,7 @@ int LinkListLen(LinkList *pList, int *pLen)
     {
         *pLen = pList->len;
     }
-    return SUCCESS;
+    return pList->len;
 }
 
 /* 获取链表指定位置的值 */
@@ -205,7 +205,18 @@ int LinkListGet(LinkList *pList, int pos, ELEMENTTYPE *data)
 /* 链表销毁 */
 int LinkListDestroy(LinkList *pList)
 {
-
+    /* 我们使用头删释放链表 */
+    int size = 0;
+    while(LinkListLen(pList,&size))
+    {
+        LinkListHeadDelete(pList);
+    }
+    // if(pList->head)
+    // {
+    //     free(pList->head);
+    //     pList->head = NULL;
+    // }
+    FREE_NODE(pList->head);
 }
 
 /* 链表遍历 */
