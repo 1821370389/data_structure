@@ -323,7 +323,8 @@ int dynamicArrayGetAppointPosData(dynamicArray *pArray, int pos, ElemType *pValu
 
     if(pValue != NULL)
     {
-        memcpy(pValue, *(pArray->data + pos), sizeof(ElemType));
+        // memcpy(pValue, *(pArray->data + pos), sizeof(ElemType));
+        *pValue = pArray->data[pos];
     }
     
     return SUCCESS;
