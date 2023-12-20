@@ -60,5 +60,7 @@ int LinkListGet(LinkList *pList, int pos, ELEMENTTYPE *data);
 /* 链表销毁 */
 int LinkListDestroy(LinkList *pList);
 
+/* 链表遍历 */
+int LinkListTraverse(LinkList *pList);
 
 #endif
