@@ -17,41 +17,41 @@ enum STATUS_CODE
 /* 宏函数*/
 #if 1
 /* 检查指针是否为空的宏函数 */
-#define CHECK_NULL_POINTER(ptr) \
-    do \
-    { \
-        if(ptr == NULL) \
-        { \
-            return NULL_PTR; \
-        }\
+#define CHECK_NULL_POINTER(ptr)                 \
+    do                                          \
+    {                                           \
+        if(ptr == NULL)                         \
+        {                                       \
+            return NULL_PTR;                    \
+        }                                       \
     } while(0)  
 /* 判断位置的合法性 */
-#define CHECK_POSITION(index, pArray) \
-    do \
-    { \
-        if(index < 0 || index > pArray->count) \
-        { \
-            return ILLEGAL_ACCESS; \
-        } \
+#define CHECK_POSITION(index, pArray)           \
+    do                                          \
+    {                                           \
+        if(index < 0 || index > pArray->count)  \
+        {                                       \
+            return ILLEGAL_ACCESS;              \
+        }                                       \
     } while(0)
 /* 释放结点内存 */
-#define FREE_NODE(node) \
-    do \
-    { \
-        if(node != NULL) \
-        { \
-            free(node); \
-            node = NULL; \
-        } \
+#define FREE_NODE(node)                         \
+    do                                          \
+    {                                           \
+        if(node != NULL)                        \
+        {                                       \
+            free(node);                         \
+            node = NULL;                        \
+        }                                       \
     } while(0)
 /* 检测分配空间是否成功 */
-#define CHECK_MALLOC_ERROR(ptr) \
-    do \
-    { \
-        if(ptr == NULL) \
-        { \
-            return MALLOC_ERROR; \
-        } \
+#define CHECK_MALLOC_ERROR(ptr)                 \
+    do                                          \
+    {                                           \
+        if(ptr == NULL)                         \
+        {                                       \
+            return MALLOC_ERROR;                \
+        }                                       \
     } while(0)
 #endif
 
@@ -310,9 +310,6 @@ int linkListDestroy(LinkList *list)
     }
     FREE_NODE(list->head);
     FREE_NODE(list);
-    clear(list);
-    free(list);
-    list = NULL;
 
 
     return SUCCESS;
@@ -341,5 +338,20 @@ int linkListTraverse(LinkList *list, int (*visit)(ELEMENTTYPE))
         travelNode = travelNode->next;
     }
     #endif
+    return SUCCESS;
+}
+
+/* 逆序遍历 */
+int linkListReverseTraverse(LinkList *list, int (*visit)(ELEMENTTYPE))
+{
+    /* 判空 */
+    CHECK_NULL_POINTER(list);
+    /* 遍历结点 */
+    LinkNode *travelNode = list->tail;
+    while(travelNode != list->head)
+    {
+        visit(travelNode->data);
+        travelNode = travelNode->prev;
+    }
     return SUCCESS;
 }

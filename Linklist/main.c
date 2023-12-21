@@ -69,6 +69,10 @@ int main()
     printf("遍历数组\n");
     linkListTraverse(list,printInt);
 
+    /* 逆序遍历 */
+    printf("逆序遍历\n");
+    linkListReverseTraverse(list,printInt);
+
     /* 获取指定位置的值 */
     int *data = (int *)malloc(sizeof(int));
     linkListGet(list, 2, (void*)&data);

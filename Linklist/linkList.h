@@ -61,4 +61,7 @@ int linkListDestroy(LinkList *list);
 /* 链表遍历 */
 int linkListTraverse(LinkList *list, int (*visit)(ELEMENTTYPE));
 
+/* 逆序遍历 */
+int linkListReverseTraverse(LinkList *list, int (*visit)(ELEMENTTYPE));
+
 #endif
