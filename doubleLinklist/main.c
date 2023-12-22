@@ -44,8 +44,8 @@ int isEqual(void *data1, void *data2)
 
 int main()
 {
-    LinkList *list = NULL;
-    linkListInit(&list);
+    DoubleLinkList *list = NULL;
+    DoubleLinkListInit(&list);
     /* ELEMENTTYPE int 是的测试*/
 #if 1
     /* 往链表里塞数据 */
@@ -53,55 +53,55 @@ int main()
     for(int idx = 0; idx < BUFFER_SIZE; idx++)
     {
         #if 1/* 尾插*/
-        linkListTailInsert(list, (void*)&buffer[idx]);
+        DoubleLinkListTailInsert(list, (void*)&buffer[idx]);
         #else/* 头插*/
-        linkListHeadInsert(list, (void*)&buffer[idx]);
+        DoubleLinkListHeadInsert(list, (void*)&buffer[idx]);
         #endif
     }
     /* 从指定位置插入 */
-    linkListInsert(list, 6, (void*)&buffer[3]);
+    DoubleLinkListInsert(list, 6, (void*)&buffer[3]);
     /* 获取链表的长度 */
     int len = 0;
-    linkListLength(list, &len);
+    DoubleLinkListLength(list, &len);
     printf("len = %d\n", len);
 
     /* 遍历数组 */
     printf("遍历数组\n");
-    linkListTraverse(list,printInt);
+    DoubleLinkListTraverse(list,printInt);
 
     /* 逆序遍历 */
     printf("逆序遍历\n");
-    linkListReverseTraverse(list,printInt);
+    DoubleLinkListReverseTraverse(list,printInt);
 
     /* 获取指定位置的值 */
     int *data = (int *)malloc(sizeof(int));
-    linkListGet(list, 2, (void*)&data);
+    DoubleLinkListGet(list, 2, (void*)&data);
     printf("data = %d\n", *(int*)data);
 
     #if 1
     /* 尾删 */
-    linkListTailDelete(list);
+    DoubleLinkListTailDelete(list);
     #else
     /* 头删 */
-    linkListHeadDelete(list);
+    DoubleLinkListHeadDelete(list);
     #endif
 
     #if 1
     /* 删除特定位置 */
-    linkListDelete(list, 2);
+    DoubleLinkListDelete(list, 2);
     #else
     /* 删除指定数据 */
     int temp = 4;
-    linkListDeleteValue(list, (void*)&temp,isEqual);
+    DoubleLinkListDeleteValue(list, (void*)&temp,isEqual);
     #endif
 
     /* 遍历数组 */
     printf("遍历数组\n");
-    linkListTraverse(list,printInt);
+    DoubleLinkListTraverse(list,printInt);
 
     /* 销毁 */
     printf("销毁\n");
-    printf("%d\n",linkListDestroy(list)) ;
+    printf("%d\n",DoubleLinkListDestroy(list)) ;
 
     
 
@@ -124,16 +124,16 @@ int main()
 
     for (int idx = 0; idx < DEFAULT_NUM; ++idx)
     {
-        linkListTailInsert(list, (void*)&buffer[idx]);
+        DoubleLinkListTailInsert(list, (void*)&buffer[idx]);
     }
 
     /* 获取链表的长度 */
     int len = 0;
-    linkListLength(list, &len);
+    DoubleLinkListLength(list, &len);
     printf("len = %d\n", len);
 
     /* 遍历数组 */
-    linkListTraverse(list,printStruct);
+    DoubleLinkListTraverse(list,printStruct);
 
 #endif
     return 0;

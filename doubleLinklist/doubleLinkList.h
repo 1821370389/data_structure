@@ -15,7 +15,7 @@ typedef struct DoubleLinkNode
 } DoubleLinkNode;
 
 /* 双链表 */
-typedef struct LinkList
+typedef struct DoubleLinkList
 {
     /* 头结点 */
     DoubleLinkNode *head;
@@ -23,45 +23,45 @@ typedef struct LinkList
     DoubleLinkNode *tail;
     /* 结点数 */
     int count;
-} LinkList;
+} DoubleLinkList;
 
 /* 链表初始化 */
-int linkListInit(LinkList **list);
+int DoubleLinkListInit(DoubleLinkList **list);
 
 /* 链表头插 */
-int linkListHeadInsert(LinkList *list, ELEMENTTYPE data);
+int DoubleLinkListHeadInsert(DoubleLinkList *list, ELEMENTTYPE data);
 
 /* 链表尾插 */
-int linkListTailInsert(LinkList *list, ELEMENTTYPE data);
+int DoubleLinkListTailInsert(DoubleLinkList *list, ELEMENTTYPE data);
 
 /* 链表指定位置插入 */
-int linkListInsert(LinkList *list, int index, ELEMENTTYPE data);
+int DoubleLinkListInsert(DoubleLinkList *list, int index, ELEMENTTYPE data);
 
 /* 获取链表长度(结点个数) */
-int linkListLength(LinkList *list, int *length);
+int DoubleLinkListLength(DoubleLinkList *list, int *length);
 
 /* 获取指定位置数据 */
-int linkListGet(LinkList *list, int index, ELEMENTTYPE *data);
+int DoubleLinkListGet(DoubleLinkList *list, int index, ELEMENTTYPE *data);
 
 /* 链表头删 */
-int linkListHeadDelete(LinkList *list);
+int DoubleLinkListHeadDelete(DoubleLinkList *list);
 
 /* 链表尾删 */
-int linkListTailDelete(LinkList *list);
+int DoubleLinkListTailDelete(DoubleLinkList *list);
 
 /* 链表指定位置删除 */
-int linkListDelete(LinkList *list, int index);
+int DoubleLinkListDelete(DoubleLinkList *list, int index);
 
 /* 链表删除指定值*/
-int linkListDeleteValue(LinkList *list, ELEMENTTYPE data,int (*isSame)(ELEMENTTYPE,ELEMENTTYPE));
+int DoubleLinkListDeleteValue(DoubleLinkList *list, ELEMENTTYPE data,int (*isSame)(ELEMENTTYPE,ELEMENTTYPE));
 
 /* 链表销毁 */
-int linkListDestroy(LinkList *list);
+int DoubleLinkListDestroy(DoubleLinkList *list);
 
 /* 链表遍历 */
-int linkListTraverse(LinkList *list, int (*visit)(ELEMENTTYPE));
+int DoubleLinkListTraverse(DoubleLinkList *list, int (*visit)(ELEMENTTYPE));
 
 /* 逆序遍历 */
-int linkListReverseTraverse(LinkList *list, int (*visit)(ELEMENTTYPE));
+int DoubleLinkListReverseTraverse(DoubleLinkList *list, int (*visit)(ELEMENTTYPE));
 
 #endif

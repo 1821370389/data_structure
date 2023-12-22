@@ -56,7 +56,7 @@ enum STATUS_CODE
 #endif
 
 /* 遍历到指定位置 */
-static int linkListFind(LinkList *list, int index, DoubleLinkNode **node)
+static int DoubleLinkListFind(DoubleLinkList *list, int index, DoubleLinkNode **node)
 {
     /* 遍历结点到插入点 */
     DoubleLinkNode *travelNode = NULL;
@@ -85,13 +85,13 @@ static int linkListFind(LinkList *list, int index, DoubleLinkNode **node)
 }
 
 /* 链表初始化 */
-int linkListInit(LinkList **list)
+int DoubleLinkListInit(DoubleLinkList **list)
 {
-    LinkList *pList = (LinkList*)malloc(sizeof(LinkList));
+    DoubleLinkList *pList = (DoubleLinkList*)malloc(sizeof(DoubleLinkList));
     CHECK_MALLOC_ERROR(pList);
 
     /* 清除脏数据 */
-    memset(pList, 0, sizeof(LinkList));
+    memset(pList, 0, sizeof(DoubleLinkList));
 
     *list = pList;
 
@@ -111,20 +111,20 @@ int linkListInit(LinkList **list)
 }
 
 /* 链表头插 */
-int linkListHeadInsert(LinkList *list, ELEMENTTYPE data)
+int DoubleLinkListHeadInsert(DoubleLinkList *list, ELEMENTTYPE data)
 {
-    return linkListInsert(list, 1, data);
+    return DoubleLinkListInsert(list, 1, data);
     
 }
 
 /* 链表尾插 */
-int linkListTailInsert(LinkList *list, ELEMENTTYPE data)
+int DoubleLinkListTailInsert(DoubleLinkList *list, ELEMENTTYPE data)
 {
-    return linkListInsert(list, list->count+1, data);
+    return DoubleLinkListInsert(list, list->count+1, data);
 }
 
 /* 链表指定位置插入 */
-int linkListInsert(LinkList *list, int index, ELEMENTTYPE data)
+int DoubleLinkListInsert(DoubleLinkList *list, int index, ELEMENTTYPE data)
 {
     /* 从习惯上讲，插入的位置一个是指定位置原数据的前面 所以输入的数会比实际大1 */
     index -= 1;
@@ -151,7 +151,7 @@ int linkListInsert(LinkList *list, int index, ELEMENTTYPE data)
     {
         /* 遍历结点到插入点 */
         DoubleLinkNode *travelNode = NULL;
-        linkListFind(list, index, &travelNode);
+        DoubleLinkListFind(list, index, &travelNode);
         /* 插入结点 */
         /* 错误示例 */
         // node->next = travelNode;
@@ -174,7 +174,7 @@ int linkListInsert(LinkList *list, int index, ELEMENTTYPE data)
 }
 
 /* 获取链表长度(结点个数) */
-int linkListLength(LinkList *list, int *length)
+int DoubleLinkListLength(DoubleLinkList *list, int *length)
 {
     /* 判空 */
     CHECK_NULL_POINTER(list);
@@ -187,7 +187,7 @@ int linkListLength(LinkList *list, int *length)
 }
 
 /* 获取指定位置数据 */
-int linkListGet(LinkList *list, int index, ELEMENTTYPE *data)
+int DoubleLinkListGet(DoubleLinkList *list, int index, ELEMENTTYPE *data)
 {
     /* 判空 */
     CHECK_NULL_POINTER(list);
@@ -197,26 +197,26 @@ int linkListGet(LinkList *list, int index, ELEMENTTYPE *data)
     
     /* 遍历到指定位置 */
     DoubleLinkNode *travelNode = NULL;
-    linkListFind(list, index, &travelNode);
+    DoubleLinkListFind(list, index, &travelNode);
     /* 返回数据 */
     *data = travelNode->data;
     return SUCCESS;
 }
 
 /* 链表头删 */
-int linkListHeadDelete(LinkList *list)
+int DoubleLinkListHeadDelete(DoubleLinkList *list)
 {
-    return linkListDelete(list, 1);
+    return DoubleLinkListDelete(list, 1);
 }
 
 /* 链表尾删 */
-int linkListTailDelete(LinkList *list)
+int DoubleLinkListTailDelete(DoubleLinkList *list)
 {
-    return linkListDelete(list, list->count);
+    return DoubleLinkListDelete(list, list->count);
 }
 
 /* 链表指定位置删除 */
-int linkListDelete(LinkList *list, int index)
+int DoubleLinkListDelete(DoubleLinkList *list, int index)
 {
     /* 判空 */
     CHECK_NULL_POINTER(list);
@@ -240,7 +240,7 @@ int linkListDelete(LinkList *list, int index)
     }
     else
     {
-        linkListFind(list, index, &travelNode);
+        DoubleLinkListFind(list, index, &travelNode);
         travelNode->prev->next = travelNode->next;
         travelNode->next->prev = travelNode->prev;
         list->count--;
@@ -251,7 +251,7 @@ int linkListDelete(LinkList *list, int index)
 }
 
 // /* 获取指定值的位置*/
-// static int linkListFindValue(LinkList *list, ELEMENTTYPE data, int *index) 
+// static int DoubleLinkListFindValue(DoubleLinkList *list, ELEMENTTYPE data, int *index) 
 // {
 //     /* 遍历结点 */
 //     int count = 1;
@@ -274,7 +274,7 @@ int linkListDelete(LinkList *list, int index)
 
 
 /* 链表删除指定值*/
-int linkListDeleteValue(LinkList *list, ELEMENTTYPE data,int (*isSame)(ELEMENTTYPE,ELEMENTTYPE))
+int DoubleLinkListDeleteValue(DoubleLinkList *list, ELEMENTTYPE data,int (*isSame)(ELEMENTTYPE,ELEMENTTYPE))
 {
     /* 判空 */
     CHECK_NULL_POINTER(list);
@@ -287,7 +287,7 @@ int linkListDeleteValue(LinkList *list, ELEMENTTYPE data,int (*isSame)(ELEMENTTY
         if (isSame(travelNode->data, data))
         {
             travelNode = travelNode->next;
-            linkListDelete(list, count);
+            DoubleLinkListDelete(list, count);
         }
         else
         {
@@ -298,7 +298,7 @@ int linkListDeleteValue(LinkList *list, ELEMENTTYPE data,int (*isSame)(ELEMENTTY
 }
 
 /* 链表销毁 */
-int linkListDestroy(LinkList *list)
+int DoubleLinkListDestroy(DoubleLinkList *list)
 {
     /* 判空 */
     CHECK_NULL_POINTER(list);
@@ -306,7 +306,7 @@ int linkListDestroy(LinkList *list)
     while(list->tail != list->head)
     {
         /* 尾删 */
-        linkListTailDelete(list);
+        DoubleLinkListTailDelete(list);
     }
     FREE_NODE(list->head);
     FREE_NODE(list);
@@ -316,7 +316,7 @@ int linkListDestroy(LinkList *list)
 }
 
 /* 链表遍历 */
-int linkListTraverse(LinkList *list, int (*visit)(ELEMENTTYPE))
+int DoubleLinkListTraverse(DoubleLinkList *list, int (*visit)(ELEMENTTYPE))
 {
     /* 判空 */
     CHECK_NULL_POINTER(list);
@@ -342,7 +342,7 @@ int linkListTraverse(LinkList *list, int (*visit)(ELEMENTTYPE))
 }
 
 /* 逆序遍历 */
-int linkListReverseTraverse(LinkList *list, int (*visit)(ELEMENTTYPE))
+int DoubleLinkListReverseTraverse(DoubleLinkList *list, int (*visit)(ELEMENTTYPE))
 {
     /* 判空 */
     CHECK_NULL_POINTER(list);
