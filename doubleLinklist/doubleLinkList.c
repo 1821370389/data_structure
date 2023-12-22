@@ -262,17 +262,16 @@ int DoubleLinkListDelete(DoubleLinkList *list, int index)
         travelNode = list->tail;
         list->tail = list->tail->prev;
         list->tail->next = NULL;
-        list->count--;
-        FREE_NODE(travelNode);
     }
     else
     {
         DoubleLinkListFind(list, index, &travelNode);
         travelNode->prev->next = travelNode->next;
         travelNode->next->prev = travelNode->prev;
-        list->count--;
-        FREE_NODE(travelNode);
     }
+
+    FREE_NODE(travelNode);
+    list->count--;
 
     return SUCCESS;
 }
