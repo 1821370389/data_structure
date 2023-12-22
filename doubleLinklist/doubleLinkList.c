@@ -1,4 +1,4 @@
-#include "linkList.h"
+#include "doubleLinkList.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -56,10 +56,10 @@ enum STATUS_CODE
 #endif
 
 /* 遍历到指定位置 */
-static int linkListFind(LinkList *list, int index, LinkNode **node)
+static int linkListFind(LinkList *list, int index, DoubleLinkNode **node)
 {
     /* 遍历结点到插入点 */
-    LinkNode *travelNode = NULL;
+    DoubleLinkNode *travelNode = NULL;
     if(index < (list->count >> 1))
     {
         /* 从头遍历 */
@@ -96,9 +96,9 @@ int linkListInit(LinkList **list)
     *list = pList;
 
     /* 初始化首尾指针 */
-    pList->head = (LinkNode *)malloc(sizeof(LinkNode));;
+    pList->head = (DoubleLinkNode *)malloc(sizeof(DoubleLinkNode));;
     CHECK_MALLOC_ERROR(pList->head);
-    memset(pList->head, 0, sizeof(LinkNode));
+    memset(pList->head, 0, sizeof(DoubleLinkNode));
     pList->head->prev = NULL;
     pList->head->data = 0;
     pList->head->next = NULL;
@@ -134,7 +134,7 @@ int linkListInsert(LinkList *list, int index, ELEMENTTYPE data)
     CHECK_POSITION(index, list);
 
     /* 创建新结点 */
-    LinkNode *node = (LinkNode *)malloc(sizeof(LinkNode));
+    DoubleLinkNode *node = (DoubleLinkNode *)malloc(sizeof(DoubleLinkNode));
     CHECK_MALLOC_ERROR(node);
     node->data = data;
     node->prev = NULL;
@@ -150,7 +150,7 @@ int linkListInsert(LinkList *list, int index, ELEMENTTYPE data)
     else/* 中间插 */
     {
         /* 遍历结点到插入点 */
-        LinkNode *travelNode = NULL;
+        DoubleLinkNode *travelNode = NULL;
         linkListFind(list, index, &travelNode);
         /* 插入结点 */
         /* 错误示例 */
@@ -196,7 +196,7 @@ int linkListGet(LinkList *list, int index, ELEMENTTYPE *data)
     CHECK_POSITION(index, list);
     
     /* 遍历到指定位置 */
-    LinkNode *travelNode = NULL;
+    DoubleLinkNode *travelNode = NULL;
     linkListFind(list, index, &travelNode);
     /* 返回数据 */
     *data = travelNode->data;
@@ -228,7 +228,7 @@ int linkListDelete(LinkList *list, int index)
     }
 
     /* 遍历结点 */
-    LinkNode *travelNode = NULL;
+    DoubleLinkNode *travelNode = NULL;
     /* 尾删 */
     if(index == list->count)
     {
@@ -255,7 +255,7 @@ int linkListDelete(LinkList *list, int index)
 // {
 //     /* 遍历结点 */
 //     int count = 1;
-//     LinkNode *travelNode = list->head->next;
+//     DoubleLinkNode *travelNode = list->head->next;
 //     while(travelNode != NULL)
 //     {
 //         if (travelNode->data == data)
@@ -281,7 +281,7 @@ int linkListDeleteValue(LinkList *list, ELEMENTTYPE data,int (*isSame)(ELEMENTTY
 
     /* 遍历结点 */
     int count = 1;
-    LinkNode *travelNode = list->head->next;
+    DoubleLinkNode *travelNode = list->head->next;
     while(travelNode != NULL)
     {
         if (isSame(travelNode->data, data))
@@ -323,7 +323,7 @@ int linkListTraverse(LinkList *list, int (*visit)(ELEMENTTYPE))
     /* 遍历结点 */
     #if 0
     /* 从头结点开始，判断下一结点是否为空，非空就跳到下一结点，打印值 */
-    LinkNode *travelNode = list->head;
+    DoubleLinkNode *travelNode = list->head;
     while(travelNode->next != NULL)
     {
         travelNode = travelNode->next;
@@ -331,7 +331,7 @@ int linkListTraverse(LinkList *list, int (*visit)(ELEMENTTYPE))
     }
     #else
     /* 从第一结点开始，判断该结点是否为空，非空就打印值，然后跳到下一结点*/
-    LinkNode *travelNode = list->head->next;
+    DoubleLinkNode *travelNode = list->head->next;
     while(travelNode != NULL)
     {
         visit(travelNode->data);
@@ -347,7 +347,7 @@ int linkListReverseTraverse(LinkList *list, int (*visit)(ELEMENTTYPE))
     /* 判空 */
     CHECK_NULL_POINTER(list);
     /* 遍历结点 */
-    LinkNode *travelNode = list->tail;
+    DoubleLinkNode *travelNode = list->tail;
     while(travelNode != list->head)
     {
         visit(travelNode->data);

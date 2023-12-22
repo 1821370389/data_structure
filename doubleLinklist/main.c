@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "linkList.h"
+#include "doubleLinkList.h"
 
 #define BUFFER_SIZE 10
 #define DEFAULT_NUM 3
@@ -124,16 +124,16 @@ int main()
 
     for (int idx = 0; idx < DEFAULT_NUM; ++idx)
     {
-        LinkListTailInsert(list, (void*)&buffer[idx]);
+        linkListTailInsert(list, (void*)&buffer[idx]);
     }
 
     /* 获取链表的长度 */
     int len = 0;
-    LinkListLen(list, &len);
+    linkListLength(list, &len);
     printf("len = %d\n", len);
 
     /* 遍历数组 */
-    LinkListTraverse(list,printStruct);
+    linkListTraverse(list,printStruct);
 
 #endif
     return 0;

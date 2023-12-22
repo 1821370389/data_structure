@@ -4,23 +4,23 @@
 #define ELEMENTTYPE void*
 
 /* 双链表结点 */
-typedef struct LinkNode 
+typedef struct DoubleLinkNode 
 {
     /* 前指针 */
-    struct LinkNode *prev;
+    struct DoubleLinkNode *prev;
     /* 后指针 */
-    struct LinkNode *next;
+    struct DoubleLinkNode *next;
     /* 数据 */
     ELEMENTTYPE data;
-} LinkNode;
+} DoubleLinkNode;
 
 /* 双链表 */
 typedef struct LinkList
 {
     /* 头结点 */
-    LinkNode *head;
+    DoubleLinkNode *head;
     /* 尾结点 */
-    LinkNode *tail;
+    DoubleLinkNode *tail;
     /* 结点数 */
     int count;
 } LinkList;
