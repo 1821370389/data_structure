@@ -277,27 +277,6 @@ int DoubleLinkListDelete(DoubleLinkList *list, int index)
     return SUCCESS;
 }
 
-// /* 获取指定值的位置*/
-// static int DoubleLinkListFindValue(DoubleLinkList *list, ELEMENTTYPE data, int *index) 
-// {
-//     /* 遍历结点 */
-//     int count = 1;
-//     DoubleLinkNode *travelNode = list->head->next;
-//     while(travelNode != NULL)
-//     {
-//         if (travelNode->data == data)
-//         {
-//             *index = count;
-//             return count;
-//         }
-//         travelNode = travelNode->next;
-//         count++;
-//     }
-//     /* 未找到指定值 */
-//     *index = UNDERFLOW;
-//     return UNDERFLOW;
-// }
-/* 判断两值是否相同 */
 
 
 /* 链表删除指定值*/
