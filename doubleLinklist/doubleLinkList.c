@@ -84,6 +84,28 @@ static int DoubleLinkListFind(DoubleLinkList *list, int index, DoubleLinkNode **
     return SUCCESS;   
 }
 
+/* 新建双链表结点 */
+static DoubleLinkNode *DoubleLinkListNewNode(ELEMENTTYPE data)
+{
+    DoubleLinkNode *node = (DoubleLinkNode *)malloc(sizeof(DoubleLinkNode));
+    /* 判断分配空间是否成功 
+        默认返回值是 int型 存在返回不兼容问题
+        所以不用宏函数
+    */
+    //CHECK_MALLOC_ERROR(node);
+    if(node == NULL)
+    {
+        return NULL;
+    }
+    /* 清除脏数据 */
+    memset(node, 0, sizeof(DoubleLinkNode));
+    /* 初始化结点 */
+    node->data = data;
+    node->next = NULL;
+    node->prev = NULL;
+    return node;
+}
+
 /* 链表初始化 */
 int DoubleLinkListInit(DoubleLinkList **list)
 {
@@ -134,18 +156,23 @@ int DoubleLinkListInsert(DoubleLinkList *list, int index, ELEMENTTYPE data)
     CHECK_POSITION(index, list);
 
     /* 创建新结点 */
-    DoubleLinkNode *node = (DoubleLinkNode *)malloc(sizeof(DoubleLinkNode));
-    CHECK_MALLOC_ERROR(node);
-    node->data = data;
-    node->prev = NULL;
-    node->next = NULL;
+    #if 0
+    DoubleLinkNode *newNode = (DoubleLinkNode *)malloc(sizeof(DoubleLinkNode));
+    CHECK_MALLOC_ERROR(newNode);
+    newNode->data = data;
+    newNode->prev = NULL;
+    newNode->next = NULL;
+    #else
+    DoubleLinkNode *newNode = DoubleLinkListNewNode(data);
+    CHECK_MALLOC_ERROR(newNode);
+    #endif
 
     /* 插入结点 */
     if(index == list->count)/* 尾插 */
     {
-        node->prev = list->tail;
-        list->tail->next = node;
-        list->tail = node;
+        newNode->prev = list->tail;
+        list->tail->next = newNode;
+        list->tail = newNode;
     }
     else/* 中间插 */
     {
@@ -154,16 +181,16 @@ int DoubleLinkListInsert(DoubleLinkList *list, int index, ELEMENTTYPE data)
         DoubleLinkListFind(list, index, &travelNode);
         /* 插入结点 */
         /* 错误示例 */
-        // node->next = travelNode;
-        // node->prev = travelNode->prev;
-        // travelNode->prev->next = node;
-        // travelNode->prev = node;
+        // newNode->next = travelNode;
+        // newNode->prev = travelNode->prev;
+        // travelNode->prev->next = newNode;
+        // travelNode->prev = newNode;
         /* 接在指定结点后,不然会被头结点往后顶，但头结点没值 */
 
-        travelNode->next->prev = node;
-        node->next = travelNode->next;
-        travelNode->next = node;
-        node->prev = travelNode;
+        travelNode->next->prev = newNode;
+        newNode->next = travelNode->next;
+        travelNode->next = newNode;
+        newNode->prev = travelNode;
     }
 
     
