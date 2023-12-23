@@ -118,7 +118,7 @@ int DoubleLinkListInit(DoubleLinkList **list)
     *list = pList;
 
     /* 初始化首尾指针 */
-    pList->head = (DoubleLinkNode *)malloc(sizeof(DoubleLinkNode));;
+    pList->head = (DoubleLinkNode *)malloc(sizeof(DoubleLinkNode));
     CHECK_MALLOC_ERROR(pList->head);
     memset(pList->head, 0, sizeof(DoubleLinkNode));
     pList->head->prev = NULL;
