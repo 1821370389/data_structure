@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "binarySearchTree.h"
+#include "../doubleLinklistQueue/doubleLinkListQueue.h"
+#include "../dynamicArrayStack/dynamicArrayStack.h"
 
 /* 状态码 */
 enum STATUS_CODE
@@ -164,34 +166,78 @@ static BSTNode* BSTGetNode(BinarySearchTree* pTree, ELEMENTTYPE data)
 /* 二叉搜索树的是否包含指定元素 */
 int BSTIsContains(BinarySearchTree* pTree, ELEMENTTYPE data)
 {
-
+    return (BSTGetNode(pTree, data) != NULL);
 }
 
 
 /* 前序遍历 */
-int BSTPreOrder(BSTNode* pTree)
+int BSTPreOrder(BinarySearchTree* pTree)
 {
+    /* 判空 */
+    CHECK_MALLOC_ERROR(pTree);
+
+    /* 栈 */
+    dynamicArrayStack *pStack = NULL;
+    DynamicArrayStackInit(&pStack);
+    dynamicArrayStackPush(pStack, pTree->root);
+
+    /* 遍历结点 */
+    BSTNode* travelNode = NULL;
+    while(!dynamicArrayStackEmpty(pStack))
+    {
+
+    }
 
     return SUCCESS;
 }
 
 /* 中序遍历 */
-int BSTInOrder(BSTNode* pTree)
+int BSTInOrder(BinarySearchTree* pTree)
 {
 
     return SUCCESS;
 }
 
 /* 后序遍历 */
-int BSTPostOrder(BSTNode* pTree)
+int BSTPostOrder(BinarySearchTree* pTree)
 {
 
     return SUCCESS;
 }
 
 /* 层序遍历 */
-int BSTLevelOrder(BSTNode* pTree)
+int BSTLevelOrder(BinarySearchTree* pTree)
 {
+    /* 判空 */
+    CHECK_MALLOC_ERROR(pTree);
 
+    DoubleLinkList * pQueue = NULL;
+    DoubleLinkListQueueInit(&pQueue);
+    DoubleLinkListQueuePush(pQueue, pTree->root);
+
+    /* 遍历结点 */
+    BSTNode* travelNode = NULL;
+    while(!DoubleLinkListQueueEmpty(pQueue))
+    {
+        DoubleLinkListQueueTop(pQueue, (void**)&travelNode);
+        DoubleLinkListQueuePop(pQueue);
+        printf("%d ", travelNode->data);
+
+        /* 左子树入队 */
+        if(travelNode->left != NULL)
+        {
+            DoubleLinkListQueuePush(pQueue, travelNode->left);
+        }
+        /* 右子树入队 */
+        if(travelNode->right != NULL)
+        {
+            DoubleLinkListQueuePush(pQueue, travelNode->right);
+        }
+    }
+    printf("\n");
+    
+    /* 销毁队列 */
+    DoubleLinkListQueueDestroy(pQueue);
+    
     return SUCCESS;
 }

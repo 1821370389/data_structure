@@ -3,6 +3,7 @@
 
 #define ELEMENTTYPE int
 
+/* 二叉树节点 */
 typedef struct BSTNode
 {
     ELEMENTTYPE data;
@@ -11,6 +12,7 @@ typedef struct BSTNode
     struct BSTNode* parent; // 父节点
 }BSTNode;
 
+/* 二叉搜索树 */
 typedef struct BinarySearchTree
 {
     /* 根节点 */
@@ -33,15 +35,15 @@ int BSTInsert(BinarySearchTree* pTree, ELEMENTTYPE data);
 int BSTIsContains(BinarySearchTree* pTree, ELEMENTTYPE data);
 
 /* 前序遍历 */
-int BSTPreOrder(BSTNode* pTree);
+int BSTPreOrder(BinarySearchTree* pTree);
 
 /* 中序遍历 */
-int BSTInOrder(BSTNode* pTree);
+int BSTInOrder(BinarySearchTree* pTree);
 
 /* 后序遍历 */
-int BSTPostOrder(BSTNode* pTree);
+int BSTPostOrder(BinarySearchTree* pTree);
 
 /* 层序遍历 */
-int BSTLevelOrder(BSTNode* pTree);
+int BSTLevelOrder(BinarySearchTree* pTree);
 
 #endif // !__BINARY_SEARCH_TREE_H__
