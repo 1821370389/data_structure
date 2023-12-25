@@ -25,24 +25,12 @@ enum STATUS_CODE
     } while(0)
 
 
-/* 比较大小 */
-static int compareFunc(ELEMENTTYPE data1, ELEMENTTYPE data2)
-{
-    return data1 - data2;
-}
-/* 新建节点 */
-static int newTreeNode(BSTNode** pNewNode, ELEMENTTYPE data)
-{
-    BSTNode* pNew = (BSTNode*)malloc(sizeof(BSTNode));
-    CHECK_MALLOC_ERROR(pNew);
-    memset(pNew, 0, sizeof(BSTNode));
-    pNew->data = data;
-    pNew->left = NULL;
-    pNew->right = NULL;
-    pNew->parent = NULL;
-    *pNewNode = pNew;
-    return SUCCESS;
-}
+/* 静态函数前置声明 */
+/* 创建节点 */
+static BSTNode* createNewBSTNode(ELEMENTTYPE data, BSTNode* parent);
+
+
+
 
 /* 二叉树搜索树初始化 */
 int BSTInit(BinarySearchTree** pTree)
@@ -53,7 +41,7 @@ int BSTInit(BinarySearchTree** pTree)
     memset(pNewTree, 0, sizeof(BinarySearchTree));
 
     /* 设置根节点 */
-    
+#if 0
     pNewTree->root = NULL;
     pNewTree->size = 0;
 
@@ -66,13 +54,16 @@ int BSTInit(BinarySearchTree** pTree)
     pNewTree->root->left = NULL;
     pNewTree->root->right = NULL;
     pNewTree->root->parent = NULL;
+#else
+    pNewTree->root = createNewBSTNode(0,NULL);
+#endif
 
     *pTree = pNewTree;
     return SUCCESS;
 }
 
 /* 二叉搜索树的插入 */
-int BSTInsert(BinarySearchTree* pTree, ELEMENTTYPE data)
+int BSTInsert(BinarySearchTree* pTree, ELEMENTTYPE data,int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE) )
 {
     /* 空树 */
     if(pTree->size == 0)
@@ -109,9 +100,7 @@ int BSTInsert(BinarySearchTree* pTree, ELEMENTTYPE data)
         }
     }
     /* 插入新节点 */
-    BSTNode* newBSTNode = NULL;
-    newTreeNode(&newBSTNode, data);
-    newBSTNode->parent = prarentNode;
+    BSTNode* newBSTNode = createNewBSTNode(data,prarentNode);
     if(flag < 0)
     {
         prarentNode->left = newBSTNode;
@@ -125,4 +114,21 @@ int BSTInsert(BinarySearchTree* pTree, ELEMENTTYPE data)
     pTree->size++;
 
     return SUCCESS;
+}
+
+/* 创建节点 */
+static BSTNode* createNewBSTNode(ELEMENTTYPE data, BSTNode* parent)
+{
+    BSTNode* pNew = (BSTNode*)malloc(sizeof(BSTNode));
+    if(pNew == NULL)
+    {
+        return NULL;
+    }
+    memset(pNew, 0, sizeof(BSTNode));
+    pNew->data = data;
+    pNew->left = NULL;
+    pNew->right = NULL;
+    pNew->parent = parent;
+    // *pNewNode = pNew;
+    return pNew;
 }
