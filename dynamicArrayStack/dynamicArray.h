@@ -3,14 +3,7 @@
 /* 避免头文件重命名*/
 
 // #define ElemType void*
-typedef void * ElemType;
-typedef struct dynamicArray
-{
-    ElemType *data; /* 数组的空间*/
-    int size;       /* 数组的大小 */
-    int capacity;   /* 数组的容量 */
-}dynamicArray;
-
+#include "common.h"
 /* API ：application pragram interface */
 
 /* 动态数组初始化 */
