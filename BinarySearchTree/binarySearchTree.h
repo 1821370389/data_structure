@@ -27,6 +27,9 @@ int BSTInit(BinarySearchTree** pTree);
 /* 二叉搜索树的插入 */
 int BSTInsert(BinarySearchTree* pTree, ELEMENTTYPE data,int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE) );
 
+/* 二叉搜索树的是否包含指定元素 */
+int BSTIsContains(BinarySearchTree* pTree, ELEMENTTYPE data, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE));
+
 /* 前序遍历 */
 int BSTPreOrder(BSTNode* pTree);
 

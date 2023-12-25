@@ -28,7 +28,8 @@ enum STATUS_CODE
 /* 静态函数前置声明 */
 /* 创建节点 */
 static BSTNode* createNewBSTNode(ELEMENTTYPE data, BSTNode* parent);
-
+/* 基于指定的值获取二叉搜索树的节点 */
+static BSTNode* BSTGetNode(BinarySearchTree* pTree, ELEMENTTYPE data, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE));
 
 
 
@@ -132,6 +133,23 @@ static BSTNode* createNewBSTNode(ELEMENTTYPE data, BSTNode* parent)
     // *pNewNode = pNew;
     return pNew;
 }
+
+/* 基于指定的值获取二叉搜索树的节点 */
+static BSTNode* BSTGetNode(BinarySearchTree* pTree, ELEMENTTYPE data, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE))
+{
+    BSTNode* travelNode = pTree->root;
+    while(travelNode != NULL)
+    {
+        int flag = compareFunc(travelNode->data, data);
+    }
+}
+
+/* 二叉搜索树的是否包含指定元素 */
+int BSTIsContains(BinarySearchTree* pTree, ELEMENTTYPE data, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE))
+{
+
+}
+
 
 /* 前序遍历 */
 int BSTPreOrder(BSTNode* pTree)
