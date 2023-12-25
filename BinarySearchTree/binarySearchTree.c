@@ -36,7 +36,7 @@ static BSTNode* BSTGetNode(BinarySearchTree* pTree, ELEMENTTYPE data);
 
 
 /* 二叉树搜索树初始化 */
-int BSTInit(BinarySearchTree** pTree, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE))
+int BSTInit(BinarySearchTree** pTree, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE), int (*printFunc)(ELEMENTTYPE))
 {
     BinarySearchTree* pNewTree = (BinarySearchTree*)malloc(sizeof(BinarySearchTree));
     CHECK_MALLOC_ERROR(pNewTree);
@@ -45,6 +45,7 @@ int BSTInit(BinarySearchTree** pTree, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYP
     pNewTree->root = NULL;
     pNewTree->size = 0;
     pNewTree->compareFunc = compareFunc;
+    pNewTree->printFunc =  printFunc;
 
     /* 设置根节点 */
 #if 0
@@ -180,12 +181,24 @@ int BSTPreOrder(BinarySearchTree* pTree)
     dynamicArrayStack *pStack = NULL;
     DynamicArrayStackInit(&pStack);
     dynamicArrayStackPush(pStack, pTree->root);
+    printf("%d ", pTree->root->data);
 
     /* 遍历结点 */
     BSTNode* travelNode = NULL;
     while(!dynamicArrayStackEmpty(pStack))
     {
-
+        dynamicArrayStackTop(pStack, (void**)&travelNode);
+        dynamicArrayStackPop(pStack);
+        /* 左子树入栈 */
+        if(travelNode->left != NULL)
+        {
+            dynamicArrayStackPush(pStack, travelNode->left);
+        }
+        /* 右子树入栈 */
+        if(travelNode->right != NULL)
+        {
+            dynamicArrayStackPush(pStack, travelNode->right);
+        }
     }
 
     return SUCCESS;
@@ -221,7 +234,7 @@ int BSTLevelOrder(BinarySearchTree* pTree)
     {
         DoubleLinkListQueueTop(pQueue, (void**)&travelNode);
         DoubleLinkListQueuePop(pQueue);
-        printf("%d ", travelNode->data);
+        pTree->printFunc(travelNode->data);
 
         /* 左子树入队 */
         if(travelNode->left != NULL)
@@ -234,8 +247,7 @@ int BSTLevelOrder(BinarySearchTree* pTree)
             DoubleLinkListQueuePush(pQueue, travelNode->right);
         }
     }
-    printf("\n");
-    
+
     /* 销毁队列 */
     DoubleLinkListQueueDestroy(pQueue);
     

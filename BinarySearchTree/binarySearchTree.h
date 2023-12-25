@@ -21,12 +21,15 @@ typedef struct BinarySearchTree
     int size;
     /* 比较函数 */
     int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE);
+
+    /* 打印函数 */
+    int (*printFunc)(ELEMENTTYPE);
     
 }BinarySearchTree;
 
 
 /* 二叉树搜索树初始化 */
-int BSTInit(BinarySearchTree** pTree, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE));
+int BSTInit(BinarySearchTree** pTree, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE), int (*printFunc)(ELEMENTTYPE));
 
 /* 二叉搜索树的插入 */
 int BSTInsert(BinarySearchTree* pTree, ELEMENTTYPE data);
