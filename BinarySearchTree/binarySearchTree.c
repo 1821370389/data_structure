@@ -54,5 +54,53 @@ int BSTInit(BinarySearchTree** pTree)
 /* 二叉搜索树的插入 */
 int BSTInsert(BinarySearchTree* pTree, ELEMENTTYPE data)
 {
+    /* 空树 */
+    if(pTree->size == 0)
+    {
+        pTree->root->data = data;
+        pTree->size++;
+        return SUCCESS;
+    }
+    /* 非空树 */
+    BSTNode* travelNode = pTree->root;  //遍历节点
+    BSTNode* prarentNode = pTree->root; //父节点
+    /* 记录符号 */
+    int flag = 0;
+    while(travelNode != NULL)
+    {
+        /* 标记父节点 */
+        prarentNode = travelNode;
+        flag =data - travelNode->data;
+        if(flag < 0)
+        {
+            /* 左子树 */
+            travelNode = travelNode->left;
+        }
+        else if(flag > 0)
+        {
+            /* 右子树 */
+            travelNode = travelNode->right;
+        }
+        else
+        {
+            /* 重复元素 */
+            /* 视情况修改，此处默认不管，直接跳过 */
+            return SUCCESS;
+        }
+    }
+    BSTNode* newNode = (BSTNode*)malloc(sizeof(BSTNode));
+    CHECK_MALLOC_ERROR(newNode);
+    memset(newNode, 0, sizeof(BSTNode));
+    newNode->data = data;
+    newNode->parent = prarentNode;
+    if(flag < 0)
+    {
+        prarentNode->left = newNode;
+    }
+    else
+    {
+        prarentNode->right = newNode;
+    }
 
+    return SUCCESS;
 }
