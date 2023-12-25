@@ -24,6 +24,26 @@ enum STATUS_CODE
         }                                       \
     } while(0)
 
+
+/* 比较大小 */
+static int compareFunc(ELEMENTTYPE data1, ELEMENTTYPE data2)
+{
+    return data1 - data2;
+}
+/* 新建节点 */
+static int newTreeNode(BSTNode** pNewNode, ELEMENTTYPE data)
+{
+    BSTNode* pNew = (BSTNode*)malloc(sizeof(BSTNode));
+    CHECK_MALLOC_ERROR(pNew);
+    memset(pNew, 0, sizeof(BSTNode));
+    pNew->data = data;
+    pNew->left = NULL;
+    pNew->right = NULL;
+    pNew->parent = NULL;
+    *pNewNode = pNew;
+    return SUCCESS;
+}
+
 /* 二叉树搜索树初始化 */
 int BSTInit(BinarySearchTree** pTree)
 {
@@ -70,7 +90,7 @@ int BSTInsert(BinarySearchTree* pTree, ELEMENTTYPE data)
     {
         /* 标记父节点 */
         prarentNode = travelNode;
-        flag =data - travelNode->data;
+        flag =compareFunc(travelNode->data, data);
         if(flag < 0)
         {
             /* 左子树 */
@@ -88,19 +108,21 @@ int BSTInsert(BinarySearchTree* pTree, ELEMENTTYPE data)
             return SUCCESS;
         }
     }
-    BSTNode* newNode = (BSTNode*)malloc(sizeof(BSTNode));
-    CHECK_MALLOC_ERROR(newNode);
-    memset(newNode, 0, sizeof(BSTNode));
-    newNode->data = data;
-    newNode->parent = prarentNode;
+    /* 插入新节点 */
+    BSTNode* newBSTNode = NULL;
+    newTreeNode(&newBSTNode, data);
+    newBSTNode->parent = prarentNode;
     if(flag < 0)
     {
-        prarentNode->left = newNode;
+        prarentNode->left = newBSTNode;
     }
     else
     {
-        prarentNode->right = newNode;
+        prarentNode->right = newBSTNode;
     }
+
+    /* 更新结点数 */
+    pTree->size++;
 
     return SUCCESS;
 }
