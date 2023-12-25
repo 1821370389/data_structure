@@ -132,3 +132,31 @@ static BSTNode* createNewBSTNode(ELEMENTTYPE data, BSTNode* parent)
     // *pNewNode = pNew;
     return pNew;
 }
+
+/* 前序遍历 */
+int BSTPreOrder(BSTNode* pTree)
+{
+
+    return SUCCESS;
+}
+
+/* 中序遍历 */
+int BSTInOrder(BSTNode* pTree)
+{
+
+    return SUCCESS;
+}
+
+/* 后序遍历 */
+int BSTPostOrder(BSTNode* pTree)
+{
+
+    return SUCCESS;
+}
+
+/* 层序遍历 */
+int BSTLevelOrder(BSTNode* pTree)
+{
+
+    return SUCCESS;
+}

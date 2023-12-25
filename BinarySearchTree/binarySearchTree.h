@@ -27,6 +27,16 @@ int BSTInit(BinarySearchTree** pTree);
 /* 二叉搜索树的插入 */
 int BSTInsert(BinarySearchTree* pTree, ELEMENTTYPE data,int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE) );
 
+/* 前序遍历 */
+int BSTPreOrder(BSTNode* pTree);
 
+/* 中序遍历 */
+int BSTInOrder(BSTNode* pTree);
+
+/* 后序遍历 */
+int BSTPostOrder(BSTNode* pTree);
+
+/* 层序遍历 */
+int BSTLevelOrder(BSTNode* pTree);
 
 #endif // !__BINARY_SEARCH_TREE_H__
