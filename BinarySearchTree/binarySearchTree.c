@@ -3,7 +3,7 @@
 #include <string.h>
 #include "binarySearchTree.h"
 #include "../doubleLinklistQueue/doubleLinkListQueue.h"
-#include "../dynamicArrayStack/dynamicArrayStack.h"
+
 
 /* 状态码 */
 enum STATUS_CODE
@@ -33,6 +33,17 @@ static BSTNode* createNewBSTNode(ELEMENTTYPE data, BSTNode* parent);
 /* 基于指定的值获取二叉搜索树的节点 */
 static BSTNode* BSTGetNode(BinarySearchTree* pTree, ELEMENTTYPE data);
 
+/* 判断二叉树的深度为2 */
+static int BSTisSearchTree2(BSTNode* node);
+/* 判断二叉树的搜索树度为1 */
+static int BSTisSearchTree(BSTNode* node);
+/* 判断二叉树的搜索树度为0 */
+static int BSTisSearchTree0(BSTNode* node);
+
+/* 获取当前结点的前驱结点 */
+static BSTNode* BSTGetPreNode(BSTNode* node);
+/* 获取当前结点的后继结点 */
+static BSTNode* BSTGetNextNode(BSTNode* node);
 
 
 /* 二叉树搜索树初始化 */
@@ -170,55 +181,60 @@ int BSTIsContains(BinarySearchTree* pTree, ELEMENTTYPE data)
     return (BSTGetNode(pTree, data) != NULL);
 }
 
-
 /* 前序遍历 */
+static int preOrderTravel(BSTNode* travelNode, BinarySearchTree* pTree)
+{
+    if(travelNode == NULL)
+    {
+        return SUCCESS;
+    }
+
+}
+
+/* 中序遍历*/
+static int inOrderTravel(BSTNode* travelNode, BinarySearchTree* pTree)
+{
+    if( travelNode == NULL)
+    {
+        return SUCCESS;
+    }
+    /* 左子树 */
+    inOrderTravel(travelNode->left, pTree);
+    pTree->printFunc(travelNode->data);
+    /* 右子树 */
+    inOrderTravel(travelNode->right, pTree);
+}
+
+/* 后序遍历 */
+static int postOrderTravel(BSTNode* travelNode, BinarySearchTree* pTree)
+{
+
+}
+
+/* 二叉搜索树的前序遍历 */
 int BSTPreOrder(BinarySearchTree* pTree)
 {
     /* 判空 */
     CHECK_MALLOC_ERROR(pTree);
-
-    /* 栈 */
-    dynamicArrayStack *pStack = NULL;
-    DynamicArrayStackInit(&pStack);
-    dynamicArrayStackPush(pStack, pTree->root);
-    printf("%d ", pTree->root->data);
-
-    /* 遍历结点 */
-    BSTNode* travelNode = NULL;
-    while(!dynamicArrayStackEmpty(pStack))
-    {
-        dynamicArrayStackTop(pStack, (void**)&travelNode);
-        dynamicArrayStackPop(pStack);
-        /* 左子树入栈 */
-        if(travelNode->left != NULL)
-        {
-            dynamicArrayStackPush(pStack, travelNode->left);
-        }
-        /* 右子树入栈 */
-        if(travelNode->right != NULL)
-        {
-            dynamicArrayStackPush(pStack, travelNode->right);
-        }
-    }
-
+    preOrderTravel(pTree->root,pTree);
     return SUCCESS;
 }
 
-/* 中序遍历 */
+/* 二叉搜索树的中序遍历 */
 int BSTInOrder(BinarySearchTree* pTree)
 {
-
+    inOrderTravel(pTree->root,pTree);
     return SUCCESS;
 }
 
-/* 后序遍历 */
+/* 二叉搜索树的后序遍历 */
 int BSTPostOrder(BinarySearchTree* pTree)
 {
 
     return SUCCESS;
 }
 
-/* 层序遍历 */
+/* 二叉搜索树的层序遍历 */
 int BSTLevelOrder(BinarySearchTree* pTree)
 {
     /* 判空 */
@@ -252,4 +268,60 @@ int BSTLevelOrder(BinarySearchTree* pTree)
     DoubleLinkListQueueDestroy(pQueue);
     
     return SUCCESS;
+}
+
+/* 获取二叉搜素树的高度 */
+int BSTGetHeight(BinarySearchTree* pTree)
+{
+    
+}
+
+/* 判断二叉树的搜索树度为2 */
+static int BSTisSearchTree2(BSTNode* node)
+{
+    return (node->left != NULL) && (node->right != NULL);
+}
+/* 判断二叉树的搜索树度为1 */
+static int BSTisSearchTree(BSTNode* node)
+{
+    return ((node->left == NULL) && (node->right != NULL)) || ((node->left != NULL) && (node->right == NULL));
+}
+/* 判断二叉树的搜索树度为0 */
+static int BSTisSearchTree0(BSTNode* node)
+{
+    return (node->left == NULL) && (node->right == NULL);
+}
+
+/* 获取当前结点的前驱结点 */
+static BSTNode* BSTGetPreNode(BSTNode* node)
+{
+    BSTNode* pNode = NULL;
+    /* 度为2 */
+    if(BSTisSearchTree2(node))
+    {
+        /* 前驱结点是左子树的(右子树的)*n子树*/
+        pNode = node->left;
+        while(pNode->right != NULL)
+        {
+            pNode = pNode->right;
+        }
+        return pNode;
+    }
+    /* 程序到这里一定是度为1/0*/
+    /* 度为1 */
+    if(BSTisSearchTree(node))
+    {
+        pNode = node->parent;
+        if(pNode->left == node)
+        {
+            pNode = pNode->parent;
+        }
+
+    }
+
+}
+/* 获取当前结点的后继结点 */
+static BSTNode* BSTGetNextNode(BSTNode* node)
+{
+
 }

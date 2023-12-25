@@ -49,4 +49,7 @@ int BSTPostOrder(BinarySearchTree* pTree);
 /* 层序遍历 */
 int BSTLevelOrder(BinarySearchTree* pTree);
 
+/* 获取二叉搜素树的高度 */
+int BSTGetHeight(BinarySearchTree* pTree);
+
 #endif // !__BINARY_SEARCH_TREE_H__
