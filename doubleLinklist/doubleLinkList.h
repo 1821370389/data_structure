@@ -1,5 +1,5 @@
-#ifndef __LINK_LIST_H__
-#define __LINK_LIST_H__
+#ifndef __DOUBLE_LINK_LIST_H__
+#define __DOUBLE_LINK_LIST_H__
 
 #define ELEMENTTYPE void*
 
