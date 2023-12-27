@@ -53,4 +53,7 @@ int BSTLevelOrder(BinarySearchTree* pTree);
 /* 获取二叉搜素树的高度 */
 int BSTGetHeight(BinarySearchTree* pTree, int *pHeight);
 
+/* 二叉搜索树的销毁 */
+int BSTDestroy(BinarySearchTree* pTree);
+
 #endif // !__BINARY_SEARCH_TREE_H__

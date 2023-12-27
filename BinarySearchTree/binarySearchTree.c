@@ -25,7 +25,16 @@ enum STATUS_CODE
             return MALLOC_ERROR;                \
         }                                       \
     } while(0)
-
+/* 释放结点内存 */
+#define FREE_NODE(node)                         \
+    do                                          \
+    {                                           \
+        if(node != NULL)                        \
+        {                                       \
+            free(node);                         \
+            node = NULL;                        \
+        }                                       \
+    } while(0)
 
 /* 静态函数前置声明 */
 /* 创建节点 */
@@ -440,4 +449,35 @@ static BSTNode* BSTGetNextNode(BSTNode* node)
         }
         return NULL;
     }
+}
+
+/* 二叉搜索树的销毁 */
+int BSTDestroy(BinarySearchTree* pTree)
+{
+    /* 判空 */
+    CHECK_MALLOC_ERROR(pTree);
+
+    /* 层序遍历 */
+    BSTNode* travelNode = NULL;
+    DoubleLinkList * pQueue = NULL;
+    DoubleLinkListQueueInit(&pQueue);
+    DoubleLinkListQueuePush(pQueue, pTree->root);
+    while(!DoubleLinkListQueueIsEmpty(pQueue))
+    {
+        DoubleLinkListQueueTop(pQueue, (void**)&travelNode);
+        DoubleLinkListQueuePop(pQueue);
+        if(travelNode->left != NULL)
+        {
+            DoubleLinkListQueuePush(pQueue, travelNode->left);
+        }
+        if(travelNode->right != NULL)
+        {
+            DoubleLinkListQueuePush(pQueue, travelNode->right);
+        }
+        FREE_NODE(travelNode);
+    }
+    DoubleLinkListQueueDestroy(pQueue);
+    FREE_NODE(pTree);
+    
+    return SUCCESS;
 }
