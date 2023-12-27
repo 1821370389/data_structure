@@ -38,6 +38,9 @@ int BSTInsert(BinarySearchTree* pTree, ELEMENTTYPE data);
 /* 二叉搜索树的是否包含指定元素 */
 int BSTIsContains(BinarySearchTree* pTree, ELEMENTTYPE data);
 
+/* 获取二叉搜索树的结点个数 */
+int BSTGetSize(BinarySearchTree* pTree, int* count);
+
 /* 前序遍历 */
 int BSTPreOrder(BinarySearchTree* pTree);
 

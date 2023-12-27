@@ -42,6 +42,16 @@ static BSTNode* createNewBSTNode(ELEMENTTYPE data, BSTNode* parent);
 /* 基于指定的值获取二叉搜索树的节点 */
 static BSTNode* BSTGetNode(BinarySearchTree* pTree, ELEMENTTYPE data);
 
+/* 前序遍历 */
+static int preOrderTravel(BSTNode* travelNode, BinarySearchTree* pTree);
+/* 中序遍历*/
+static int inOrderTravel(BSTNode* travelNode, BinarySearchTree* pTree);
+/* 后序遍历 */
+static int postOrderTravel(BSTNode* travelNode, BinarySearchTree* pTree);
+/* 左右子树入队 */
+static void BSTLeftRightPush(DoubleLinkList * pQueue, BSTNode* node);
+
+
 /* 判断二叉树的深度为2 */
 static int BSTChildHad2(BSTNode* node);
 /* 判断二叉树的搜索树度为1 */
@@ -53,6 +63,9 @@ static int BSTChildHad0(BSTNode* node);
 static BSTNode* BSTGetPreNode(BSTNode* node);
 /* 获取当前结点的后继结点 */
 static BSTNode* BSTGetNextNode(BSTNode* node);
+
+/* 二叉搜索树的节点删除 */
+static int BSTDeleteNode(BSTNode* pNode, BinarySearchTree* pTree);
 
 
 /* 二叉树搜索树初始化 */
@@ -143,6 +156,165 @@ int BSTInsert(BinarySearchTree* pTree, ELEMENTTYPE data)
     return SUCCESS;
 }
 
+/* 二叉搜索树的是否包含指定元素 */
+int BSTIsContains(BinarySearchTree* pTree, ELEMENTTYPE data)
+{
+    return (BSTGetNode(pTree, data) != NULL);
+}
+
+/* 获取二叉搜索树的结点个数 */
+int BSTGetSize(BinarySearchTree *pTree, int *count)
+{
+    if(pTree == NULL)
+    {
+        *count = 0;
+        return NULL_PTR;
+    }
+    *count = pTree->size;
+    return SUCCESS;
+}
+
+/* 二叉搜索树的前序遍历 */
+int BSTPreOrder(BinarySearchTree* pTree)
+{
+    /* 判空 */
+    CHECK_MALLOC_ERROR(pTree);
+    preOrderTravel(pTree->root,pTree);
+    return SUCCESS;
+}
+
+/* 二叉搜索树的中序遍历 */
+int BSTInOrder(BinarySearchTree* pTree)
+{
+    inOrderTravel(pTree->root,pTree);
+    return SUCCESS;
+}
+
+/* 二叉搜索树的后序遍历 */
+int BSTPostOrder(BinarySearchTree* pTree)
+{
+    postOrderTravel(pTree->root,pTree);
+    return SUCCESS;
+}
+
+/* 二叉搜索树的层序遍历 */
+int BSTLevelOrder(BinarySearchTree* pTree)
+{
+    /* 判空 */
+    CHECK_MALLOC_ERROR(pTree);
+
+    DoubleLinkList * pQueue = NULL;
+    DoubleLinkListQueueInit(&pQueue);
+    DoubleLinkListQueuePush(pQueue, pTree->root);
+
+    /* 遍历结点 */
+    BSTNode* travelNode = NULL;
+    while(!DoubleLinkListQueueIsEmpty(pQueue))
+    {
+        DoubleLinkListQueueTop(pQueue, (void**)&travelNode);
+        DoubleLinkListQueuePop(pQueue);
+        pTree->printFunc(travelNode->data);
+
+        /* 左右子树入队 */
+        BSTLeftRightPush(pQueue, travelNode);
+    }
+
+    /* 销毁队列 */
+    DoubleLinkListQueueDestroy(pQueue);
+    
+    return SUCCESS;
+}
+
+/* 获取二叉搜素树的高度 */
+int BSTGetHeight(BinarySearchTree* pTree, int *pHeight)
+{
+
+    #if 1
+    int height = 0;
+    /* 判空 */
+    CHECK_MALLOC_ERROR(pTree);
+
+    /* 空树 */
+    if(pTree->size == 0)
+    {
+        return height;
+    }
+
+    DoubleLinkList * pQueue = NULL;
+    DoubleLinkListQueueInit(&pQueue);
+    DoubleLinkListQueuePush(pQueue, pTree->root);
+
+    /* 树每层的结点数 */
+    int levelSize = 1;
+    /* 遍历结点 */
+    BSTNode* travelNode = NULL;
+    while(!DoubleLinkListQueueIsEmpty(pQueue))
+    {
+        DoubleLinkListQueueTop(pQueue, (void**)&travelNode);
+        DoubleLinkListQueuePop(pQueue);
+        levelSize--;
+
+        /* 左右子树入队 */
+        BSTLeftRightPush(pQueue, travelNode);
+
+        /* 如果levelSize = 0 说明该层结束了*/
+        if(levelSize == 0)
+        {
+            height++;
+            DoubleLinkListQueueSize(pQueue, &levelSize);
+        }
+    }
+
+    *pHeight = height;
+
+    /* 销毁队列 */
+    DoubleLinkListQueueDestroy(pQueue);
+    
+    return SUCCESS;
+    #endif
+}
+
+/* 二叉搜索树的销毁 */
+int BSTDestroy(BinarySearchTree* pTree)
+{
+    /* 判空 */
+    CHECK_MALLOC_ERROR(pTree);
+
+    /* 层序遍历 */
+    BSTNode* travelNode = NULL;
+    DoubleLinkList * pQueue = NULL;
+    DoubleLinkListQueueInit(&pQueue);
+    DoubleLinkListQueuePush(pQueue, pTree->root);
+    while(!DoubleLinkListQueueIsEmpty(pQueue))
+    {
+        DoubleLinkListQueueTop(pQueue, (void**)&travelNode);
+        DoubleLinkListQueuePop(pQueue);
+        if(travelNode->left != NULL)
+        {
+            DoubleLinkListQueuePush(pQueue, travelNode->left);
+        }
+        if(travelNode->right != NULL)
+        {
+            DoubleLinkListQueuePush(pQueue, travelNode->right);
+        }
+        FREE_NODE(travelNode);
+    }
+    DoubleLinkListQueueDestroy(pQueue);
+    FREE_NODE(pTree);
+    
+    return SUCCESS;
+}
+
+/* 二叉搜索树的节点删除 */
+int BSTDelete(BinarySearchTree* pTree, ELEMENTTYPE data)
+{
+    /* 判空 */
+    CHECK_MALLOC_ERROR(pTree);
+    return BSTDeleteNode(BSTGetNode(pTree, data), pTree);
+}
+
+
+
 /* 创建节点 */
 static BSTNode* createNewBSTNode(ELEMENTTYPE data, BSTNode* parent)
 {
@@ -184,11 +356,6 @@ static BSTNode* BSTGetNode(BinarySearchTree* pTree, ELEMENTTYPE data)
     return NULL;
 }
 
-/* 二叉搜索树的是否包含指定元素 */
-int BSTIsContains(BinarySearchTree* pTree, ELEMENTTYPE data)
-{
-    return (BSTGetNode(pTree, data) != NULL);
-}
 
 /* 前序遍历 */
 static int preOrderTravel(BSTNode* travelNode, BinarySearchTree* pTree)
@@ -236,120 +403,21 @@ static int postOrderTravel(BSTNode* travelNode, BinarySearchTree* pTree)
     return SUCCESS;
 }
 
-/* 二叉搜索树的前序遍历 */
-int BSTPreOrder(BinarySearchTree* pTree)
+/* 左右子树入队 */
+static void BSTLeftRightPush(DoubleLinkList * pQueue, BSTNode* node)
 {
-    /* 判空 */
-    CHECK_MALLOC_ERROR(pTree);
-    preOrderTravel(pTree->root,pTree);
-    return SUCCESS;
-}
-
-/* 二叉搜索树的中序遍历 */
-int BSTInOrder(BinarySearchTree* pTree)
-{
-    inOrderTravel(pTree->root,pTree);
-    return SUCCESS;
-}
-
-/* 二叉搜索树的后序遍历 */
-int BSTPostOrder(BinarySearchTree* pTree)
-{
-    postOrderTravel(pTree->root,pTree);
-    return SUCCESS;
-}
-
-/* 二叉搜索树的层序遍历 */
-int BSTLevelOrder(BinarySearchTree* pTree)
-{
-    /* 判空 */
-    CHECK_MALLOC_ERROR(pTree);
-
-    DoubleLinkList * pQueue = NULL;
-    DoubleLinkListQueueInit(&pQueue);
-    DoubleLinkListQueuePush(pQueue, pTree->root);
-
-    /* 遍历结点 */
-    BSTNode* travelNode = NULL;
-    while(!DoubleLinkListQueueIsEmpty(pQueue))
+    /* 左子树入队 */
+    if(node->left != NULL)
     {
-        DoubleLinkListQueueTop(pQueue, (void**)&travelNode);
-        DoubleLinkListQueuePop(pQueue);
-        pTree->printFunc(travelNode->data);
-
-        /* 左子树入队 */
-        if(travelNode->left != NULL)
-        {
-            DoubleLinkListQueuePush(pQueue, travelNode->left);
-        }
-        /* 右子树入队 */
-        if(travelNode->right != NULL)
-        {
-            DoubleLinkListQueuePush(pQueue, travelNode->right);
-        }
+        DoubleLinkListQueuePush(pQueue, node->left);
     }
-
-    /* 销毁队列 */
-    DoubleLinkListQueueDestroy(pQueue);
-    
-    return SUCCESS;
+    /* 右子树入队 */
+    if(node->right != NULL)
+    {
+        DoubleLinkListQueuePush(pQueue, node->right);
+    }
 }
 
-/* 获取二叉搜素树的高度 */
-int BSTGetHeight(BinarySearchTree* pTree, int *pHeight)
-{
-
-    #if 1
-    int height = 0;
-    /* 判空 */
-    CHECK_MALLOC_ERROR(pTree);
-
-    /* 空树 */
-    if(pTree->size == 0)
-    {
-        return height;
-    }
-
-    DoubleLinkList * pQueue = NULL;
-    DoubleLinkListQueueInit(&pQueue);
-    DoubleLinkListQueuePush(pQueue, pTree->root);
-
-    /* 树每层的结点数 */
-    int levelSize = 1;
-    /* 遍历结点 */
-    BSTNode* travelNode = NULL;
-    while(!DoubleLinkListQueueIsEmpty(pQueue))
-    {
-        DoubleLinkListQueueTop(pQueue, (void**)&travelNode);
-        DoubleLinkListQueuePop(pQueue);
-        levelSize--;
-        /* 左子树入队 */
-        if(travelNode->left != NULL)
-        {
-            DoubleLinkListQueuePush(pQueue, travelNode->left);
-        }
-        /* 右子树入队 */
-        if(travelNode->right != NULL)
-        {
-            DoubleLinkListQueuePush(pQueue, travelNode->right);
-        }
-
-        /* 如果levelSize = 0 说明该层结束了*/
-        if(levelSize == 0)
-        {
-            height++;
-            DoubleLinkListQueueSize(pQueue, &levelSize);
-        }
-    }
-
-    *pHeight = height;
-
-    /* 销毁队列 */
-    DoubleLinkListQueueDestroy(pQueue);
-    
-    return SUCCESS;
-    #endif
-}
 
 /* 判断二叉树的搜索树度为2 */
 static int BSTChildHad2(BSTNode* node)
@@ -366,6 +434,7 @@ static int BSTChildHad0(BSTNode* node)
 {
     return (node->left == NULL) && (node->right == NULL);
 }
+
 
 /* 获取当前结点的前驱结点 */
 static BSTNode* BSTGetPreNode(BSTNode* node)
@@ -443,36 +512,6 @@ static BSTNode* BSTGetNextNode(BSTNode* node)
     #endif
 }
 
-/* 二叉搜索树的销毁 */
-int BSTDestroy(BinarySearchTree* pTree)
-{
-    /* 判空 */
-    CHECK_MALLOC_ERROR(pTree);
-
-    /* 层序遍历 */
-    BSTNode* travelNode = NULL;
-    DoubleLinkList * pQueue = NULL;
-    DoubleLinkListQueueInit(&pQueue);
-    DoubleLinkListQueuePush(pQueue, pTree->root);
-    while(!DoubleLinkListQueueIsEmpty(pQueue))
-    {
-        DoubleLinkListQueueTop(pQueue, (void**)&travelNode);
-        DoubleLinkListQueuePop(pQueue);
-        if(travelNode->left != NULL)
-        {
-            DoubleLinkListQueuePush(pQueue, travelNode->left);
-        }
-        if(travelNode->right != NULL)
-        {
-            DoubleLinkListQueuePush(pQueue, travelNode->right);
-        }
-        FREE_NODE(travelNode);
-    }
-    DoubleLinkListQueueDestroy(pQueue);
-    FREE_NODE(pTree);
-    
-    return SUCCESS;
-}
 
 /* 二叉搜索树的节点删除 */
 static int BSTDeleteNode(BSTNode* pNode, BinarySearchTree* pTree)
@@ -492,25 +531,25 @@ static int BSTDeleteNode(BSTNode* pNode, BinarySearchTree* pTree)
     {
         /* 度为1 */
         pChildNode->parent = pNode->parent;
+        if(pNode->parent == NULL)
+        {
+            /* 删除根节点 */
+            pTree->root = pChildNode;
+        }
 
-    }
-    if(pNode->parent->left == pNode)
-    {
-        pNode->parent->left = pChildNode;
     }
     else
     {
-        pNode->parent->right = pChildNode;
+        if(pNode->parent->left == pNode)
+        {
+            pNode->parent->left = pChildNode;
+        }
+        else
+        {
+            pNode->parent->right = pChildNode;
+        }
     }
     FREE_NODE(pNode);
     pTree->size--;
     return SUCCESS;
 }
-/* 二叉搜索树的节点删除 */
-int BSTDelete(BinarySearchTree* pTree, ELEMENTTYPE data)
-{
-    /* 判空 */
-    CHECK_MALLOC_ERROR(pTree);
-    return BSTDeleteNode(BSTGetNode(pTree, data), pTree);
-}
-

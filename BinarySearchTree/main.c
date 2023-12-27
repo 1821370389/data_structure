@@ -24,11 +24,17 @@ int main()
     BSTInit(&tree, compareFunc, printFunc);
 
     /* 插入数据 */
-    int arr[BUFFER_SIZE] = {37, 29, 80, 8, 47, 97, 76, 96, 52, 51};
-    for (int i = 0; i < BUFFER_SIZE; i++)
+    // int arr[BUFFER_SIZE] = {37, 29, 80, 8, 47, 97, 76, 96, 52, 51};
+    int arr[BUFFER_SIZE] = {37, 50,55,52,38,47, 97, 76, 96, 45};
+    for (int idx = 0; idx < BUFFER_SIZE; idx++)
     {
-        BSTInsert(tree, &arr[i]);
+        BSTInsert(tree, &arr[idx]);
     }
+    
+    /* 获取二叉搜索树的节点个数 */
+    int size = 0;
+    BSTGetSize(tree, &size);
+    printf("size = %d\n", size);
     
     /* 前序遍历 */
     printf("前序遍历：\n");
@@ -39,16 +45,19 @@ int main()
     printf("中序遍历：\n");
     BSTInOrder(tree);
     printf("\n");
+
     /* 删除 */
-    BSTDelete(tree, &arr[5]);
+    BSTDelete(tree, &arr[0]);
     /* 中序遍历 */
     printf("中序遍历：\n");
     BSTInOrder(tree);
     printf("\n");
+
     /* 后序遍历 */
     printf("后序遍历：\n");
     BSTPostOrder(tree);
     printf("\n");
+
     /* 层序遍历 */
     printf("层序遍历：\n");
     BSTLevelOrder(tree);
