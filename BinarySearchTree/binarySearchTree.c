@@ -404,6 +404,7 @@ static BSTNode* BSTGetPreNode(BSTNode* node)
         }
         return pNode;
     }
+    #if 0
     else
     {
         pNode = node;
@@ -419,6 +420,13 @@ static BSTNode* BSTGetPreNode(BSTNode* node)
         return NULL;
         
     }
+    #else
+    while(node->parent != NULL && node->parent->left != node)
+    {
+        node = node->parent;
+    }
+    return node->parent;
+    #endif
 
     #endif
 
@@ -436,6 +444,7 @@ static BSTNode* BSTGetNextNode(BSTNode* node)
         }
         return pNode;
     }
+    #if 0
     else
     {
         pNode = node;
@@ -449,6 +458,13 @@ static BSTNode* BSTGetNextNode(BSTNode* node)
         }
         return NULL;
     }
+    #else
+    while(node->parent != NULL && node->parent->right != node)
+    {
+        node = node->parent;
+    }
+    return node->parent;
+    #endif
 }
 
 /* 二叉搜索树的销毁 */
