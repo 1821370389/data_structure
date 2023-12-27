@@ -8,9 +8,11 @@
 typedef struct AVLNode
 {
     ELEMENTTYPE data;
+    int height;             // 高度
     struct AVLNode* left;   // 左子树
     struct AVLNode* right;  // 右子树
     struct AVLNode* parent; // 父节点
+    
 }AVLNode;
 
 /* 平衡二叉搜索树 */

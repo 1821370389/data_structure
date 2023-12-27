@@ -67,6 +67,10 @@ static AVLNode* AVLGetNextNode(AVLNode* node);
 /* 平衡二叉搜索树的节点删除 */
 static int AVLDeleteNode(AVLNode* pNode, BalanceBinarySearchTree* pTree);
 
+/* 平衡二叉搜索树添加节点后... */
+static int AVLAddNodeAfter(AVLNode* pNode, BalanceBinarySearchTree* pTree);
+
+
 
 /* 平衡二叉树搜索树初始化 */
 int AVLInit(BalanceBinarySearchTree** pTree, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE), int (*printFunc)(ELEMENTTYPE))
@@ -110,6 +114,7 @@ int AVLInsert(BalanceBinarySearchTree* pTree, ELEMENTTYPE data)
     {
         pTree->root->data = data;
         pTree->size++;
+        AVLAddNodeAfter(pTree->root, pTree);
         return SUCCESS;
     }
     /* 非空树 */
@@ -149,6 +154,8 @@ int AVLInsert(BalanceBinarySearchTree* pTree, ELEMENTTYPE data)
     {
         prarentNode->right = newAVLNode;
     }
+    /* 调整节点高度 */
+    AVLAddNodeAfter(newAVLNode, pTree);
 
     /* 更新结点数 */
     pTree->size++;
@@ -325,6 +332,7 @@ static AVLNode* createNewAVLNode(ELEMENTTYPE data, AVLNode* parent)
     }
     memset(pNew, 0, sizeof(AVLNode));
     pNew->data = data;
+    pNew->height = 1;
     pNew->left = NULL;
     pNew->right = NULL;
     pNew->parent = parent;
@@ -551,4 +559,13 @@ static int AVLDeleteNode(AVLNode* pNode, BalanceBinarySearchTree* pTree)
     FREE_NODE(pNode);
     pTree->size--;
     return SUCCESS;
+}
+
+/* 平衡二叉搜索树添加节点后... */
+static int AVLAddNodeAfter(AVLNode* pNode, BalanceBinarySearchTree* pTree)
+{
+    /* 更新节点高度 */
+    AVLUpdateHeight(pNode);
+    /* 调整平衡 */
+    AVLBalance(pNode, pTree);
 }
