@@ -8,7 +8,7 @@
 /* 打印函数 */
 int printFunc(void *data)
 {
-    printf("%d ", *(int *)data);
+    printf("%d,", *(int *)data);
 }
 /* 比较函数 */
 int compareFunc(void *data1, void *data2)
@@ -34,6 +34,13 @@ int main()
     printf("前序遍历：\n");
     BSTPreOrder(tree);
     printf("\n");
+
+    /* 中序遍历 */
+    printf("中序遍历：\n");
+    BSTInOrder(tree);
+    printf("\n");
+    /* 删除 */
+    BSTDelete(tree, &arr[5]);
     /* 中序遍历 */
     printf("中序遍历：\n");
     BSTInOrder(tree);
