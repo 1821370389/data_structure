@@ -1,7 +1,8 @@
 #ifndef __BINARY_SEARCH_TREE_H__
 #define __BINARY_SEARCH_TREE_H__
 
-#define ELEMENTTYPE int
+// #define ELEMENTTYPE void*
+#include "common.h"
 
 /* 二叉树节点 */
 typedef struct BSTNode
@@ -50,6 +51,6 @@ int BSTPostOrder(BinarySearchTree* pTree);
 int BSTLevelOrder(BinarySearchTree* pTree);
 
 /* 获取二叉搜素树的高度 */
-int BSTGetHeight(BinarySearchTree* pTree);
+int BSTGetHeight(BinarySearchTree* pTree, int *pHeight);
 
 #endif // !__BINARY_SEARCH_TREE_H__

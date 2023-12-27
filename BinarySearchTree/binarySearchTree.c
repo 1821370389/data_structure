@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "binarySearchTree.h"
-#include "../doubleLinklistQueue/doubleLinkListQueue.h"
+#include "doubleLinkListQueue.h"
 
 
 /* 状态码 */
@@ -188,6 +188,12 @@ static int preOrderTravel(BSTNode* travelNode, BinarySearchTree* pTree)
     {
         return SUCCESS;
     }
+    pTree->printFunc(travelNode->data);
+    /* 左子树 */
+    preOrderTravel(travelNode->left, pTree);
+    /* 右子树 */
+    preOrderTravel(travelNode->right, pTree);
+    return SUCCESS;
 
 }
 
@@ -203,12 +209,22 @@ static int inOrderTravel(BSTNode* travelNode, BinarySearchTree* pTree)
     pTree->printFunc(travelNode->data);
     /* 右子树 */
     inOrderTravel(travelNode->right, pTree);
+    return SUCCESS;
 }
 
 /* 后序遍历 */
 static int postOrderTravel(BSTNode* travelNode, BinarySearchTree* pTree)
 {
-
+    if(travelNode == NULL)
+    {
+        return SUCCESS;
+    }
+    /* 左子树 */
+    postOrderTravel(travelNode->left, pTree);
+    /* 右子树 */
+    postOrderTravel(travelNode->right, pTree);
+    pTree->printFunc(travelNode->data);
+    return SUCCESS;
 }
 
 /* 二叉搜索树的前序遍历 */
@@ -230,7 +246,7 @@ int BSTInOrder(BinarySearchTree* pTree)
 /* 二叉搜索树的后序遍历 */
 int BSTPostOrder(BinarySearchTree* pTree)
 {
-
+    postOrderTravel(pTree->root,pTree);
     return SUCCESS;
 }
 
@@ -246,7 +262,7 @@ int BSTLevelOrder(BinarySearchTree* pTree)
 
     /* 遍历结点 */
     BSTNode* travelNode = NULL;
-    while(!DoubleLinkListQueueEmpty(pQueue))
+    while(!DoubleLinkListQueueIsEmpty(pQueue))
     {
         DoubleLinkListQueueTop(pQueue, (void**)&travelNode);
         DoubleLinkListQueuePop(pQueue);
@@ -271,9 +287,59 @@ int BSTLevelOrder(BinarySearchTree* pTree)
 }
 
 /* 获取二叉搜素树的高度 */
-int BSTGetHeight(BinarySearchTree* pTree)
+int BSTGetHeight(BinarySearchTree* pTree, int *pHeight)
 {
+
+    #if 1
+    int height = 0;
+    /* 判空 */
+    CHECK_MALLOC_ERROR(pTree);
+
+    /* 空树 */
+    if(pTree->size == 0)
+    {
+        return height;
+    }
+
+    DoubleLinkList * pQueue = NULL;
+    DoubleLinkListQueueInit(&pQueue);
+    DoubleLinkListQueuePush(pQueue, pTree->root);
+
+    /* 树每层的结点数 */
+    int levelSize = 1;
+    /* 遍历结点 */
+    BSTNode* travelNode = NULL;
+    while(!DoubleLinkListQueueIsEmpty(pQueue))
+    {
+        DoubleLinkListQueueTop(pQueue, (void**)&travelNode);
+        DoubleLinkListQueuePop(pQueue);
+        levelSize--;
+        /* 左子树入队 */
+        if(travelNode->left != NULL)
+        {
+            DoubleLinkListQueuePush(pQueue, travelNode->left);
+        }
+        /* 右子树入队 */
+        if(travelNode->right != NULL)
+        {
+            DoubleLinkListQueuePush(pQueue, travelNode->right);
+        }
+
+        /* 如果levelSize = 0 说明该层结束了*/
+        if(levelSize == 0)
+        {
+            height++;
+            DoubleLinkListQueueSize(pQueue, &levelSize);
+        }
+    }
+
+    *pHeight = height;
+
+    /* 销毁队列 */
+    DoubleLinkListQueueDestroy(pQueue);
     
+    return SUCCESS;
+    #endif
 }
 
 /* 判断二叉树的搜索树度为2 */
@@ -296,6 +362,7 @@ static int BSTisSearchTree0(BSTNode* node)
 static BSTNode* BSTGetPreNode(BSTNode* node)
 {
     BSTNode* pNode = NULL;
+    #if 0
     /* 度为2 */
     if(BSTisSearchTree2(node))
     {
@@ -318,10 +385,59 @@ static BSTNode* BSTGetPreNode(BSTNode* node)
         }
 
     }
+    #else
+    if (node->left != NULL)
+    {
+        pNode = node->left;
+        while(pNode->right != NULL)
+        {
+            pNode = pNode->right;
+        }
+        return pNode;
+    }
+    else
+    {
+        pNode = node;
+
+        while(pNode->parent != NULL)
+        {
+            if(pNode->parent->left == pNode)
+            {
+                return pNode->parent;
+            }
+            pNode = pNode->parent;
+        }
+        return NULL;
+        
+    }
+
+    #endif
 
 }
 /* 获取当前结点的后继结点 */
 static BSTNode* BSTGetNextNode(BSTNode* node)
 {
-
+    BSTNode* pNode = NULL;
+    if(node->right != NULL)
+    {
+        pNode = node->right;
+        while(pNode->left != NULL)
+        {
+            pNode = pNode->left;
+        }
+        return pNode;
+    }
+    else
+    {
+        pNode = node;
+        while(pNode != NULL)
+        {
+            if(pNode->parent->right == pNode)
+            {
+                return pNode->parent;
+            }
+            pNode = pNode->parent;
+        }
+        return NULL;
+    }
 }
