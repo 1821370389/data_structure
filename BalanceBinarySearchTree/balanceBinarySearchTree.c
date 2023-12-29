@@ -257,7 +257,7 @@ int AVLLevelOrder(BalanceBinarySearchTree* pTree)
 int AVLGetHeight(BalanceBinarySearchTree* pTree, int *pHeight)
 {
 
-    #if 1
+
     int height = 0;
     /* 判空 */
     CHECK_MALLOC_ERROR(pTree);
@@ -265,9 +265,10 @@ int AVLGetHeight(BalanceBinarySearchTree* pTree, int *pHeight)
     /* 空树 */
     if(pTree->size == 0)
     {
+        *pHeight = 0;
         return height;
     }
-
+#if 0
     DoubleLinkList * pQueue = NULL;
     DoubleLinkListQueueInit(&pQueue);
     DoubleLinkListQueuePush(pQueue, pTree->root);
@@ -299,7 +300,10 @@ int AVLGetHeight(BalanceBinarySearchTree* pTree, int *pHeight)
     DoubleLinkListQueueDestroy(pQueue);
     
     return SUCCESS;
-    #endif
+#else
+    *pHeight = pTree->root->height;
+    return pTree->root->height;
+#endif
 }
 
 /* 平衡二叉搜索树的销毁 */
