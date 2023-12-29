@@ -73,6 +73,8 @@ static int AVLDeleteNode(AVLNode* pNode, BalanceBinarySearchTree* pTree);
 
 /* 平衡二叉搜索树添加节点后... */
 static int AVLAddNodeAfter(AVLNode* pNode, BalanceBinarySearchTree* pTree);
+/* 删除节点后...*/
+static int AVLDeleteNodeAfter(AVLNode* pNode, BalanceBinarySearchTree* pTree);
 /* 计算节点的平衡因子 */
 static int AVLGetBalanceFactor(AVLNode* node);
 /* 判断节点是否平衡 */
@@ -573,6 +575,7 @@ static int AVLDeleteNode(AVLNode* pNode, BalanceBinarySearchTree* pTree)
     {
         /* 度为1 */
         pChildNode->parent = pNode->parent;
+        AVLDeleteNodeAfter(pNode, pTree);
         if(pNode->parent == NULL)
         {
             /* 删除根节点 */
@@ -619,6 +622,13 @@ static int AVLAddNodeAfter(AVLNode* pNode, BalanceBinarySearchTree* pTree)
         }
     }
     
+}
+
+/* 删除节点后...*/
+/* 删除节点后可能会影响树的平衡 */
+static int AVLDeleteNodeAfter(AVLNode* pNode, BalanceBinarySearchTree* pTree)
+{
+
 }
 
 /* 计算节点的平衡因子 */
