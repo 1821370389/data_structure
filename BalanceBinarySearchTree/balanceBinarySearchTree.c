@@ -85,13 +85,21 @@ static int Max(int a, int b);
 
 /* 调整平衡 */
 static int AVLBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree);
-/* 左旋 */
-static int AVLLeftRotate(AVLNode* pNode, BalanceBinarySearchTree* pTree);
-/* 右旋 */
-static int AVLRightRotate(AVLNode* pNode, BalanceBinarySearchTree* pTree);
+/* 左左平衡 */
+static int AVLLeftLeftBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree);
+/* 左右平衡 */
+static int AVLLeftRightBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree);
+/* 右左平衡 */
+static int AVLRightLeftBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree);
+/* 右右平衡 */
+static int AVLRightRightBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree);
 /* 返回更高的子节点 */
 static AVLNode* AVLGetHighestNode(AVLNode* node);
 
+/* 判断当前节点是否父节点的左节点 */
+static int AVLIsParentLeft(AVLNode* pNode);
+/* 判断当前节点是否父节点的右节点 */
+static int AVLIsParentRight(AVLNode* pNode);
 
 /* 平衡二叉树搜索树初始化 */
 int AVLInit(BalanceBinarySearchTree** pTree, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE), int (*printFunc)(ELEMENTTYPE))
@@ -725,17 +733,20 @@ static int AVLBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree)
 #else
 
     AVLNode* pParentNode = AVLGetHighestNode(pNode);
-    AVLNode* pChildNode = AVLGetHighestNode(pNode);
+    AVLNode* pChildNode = AVLGetHighestNode(pParentNode);
     if(AVLIsParentLeft(pParentNode))
     {
         /* 左平衡 */
         if(AVLIsParentLeft(pChildNode))
         {
             /* 左左 */
+            AVLLeftLeftBalance(pParentNode,pTree);
+            AVLNodeUpdateHeight(pParentNode);
         }
         else 
         {
             /* 左右 */
+            AVLLeftRightBalance(pParentNode,pTree);
         }
     }
     else
@@ -756,14 +767,81 @@ static int AVLBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree)
 
 }
 
-/* 左旋 */
-static int AVLLeftRotate(AVLNode* pNode, BalanceBinarySearchTree* pTree)
+/* 左左平衡 */
+static int AVLLeftLeftBalance(AVLNode* pGrandNode, BalanceBinarySearchTree* pTree)
+{
+    AVLNode* pParentNode = pGrandNode->left;
+    AVLNode* pChildNode = pParentNode->right;
+
+    pGrandNode->left = pChildNode;
+    pParentNode->right = pGrandNode;
+
+    pParentNode->parent = pGrandNode->parent;
+    if(AVLIsParentLeft(pGrandNode))
+    {
+        pGrandNode->parent->left = pParentNode;
+    }
+    else if(AVLIsParentRight(pGrandNode))
+    {
+        pGrandNode->parent->right = pParentNode;
+    }
+    else
+    {
+        /* 根节点 */
+        pTree->root = pParentNode;
+    }
+
+    if(pChildNode != NULL)
+    {
+        pChildNode->parent = pGrandNode;
+    }
+
+    /* 更新高度*/
+    AVLNodeUpdateHeight(pGrandNode);
+    AVLNodeUpdateHeight(pParentNode);
+
+}
+/* 左右平衡 */
+static int AVLLeftRightBalance(AVLNode* pGrandNode, BalanceBinarySearchTree* pTree)
 {
 
 }
+/* 右右平衡 */
+static int AVLRightRightBalance(AVLNode* pGrandNode, BalanceBinarySearchTree* pTree)
+{
+    AVLNode* pParentNode = pGrandNode->right;
+    AVLNode* pChildNode = pParentNode->left;
 
-/* 右旋 */
-static int AVLRightRotate(AVLNode* pNode, BalanceBinarySearchTree* pTree)
+    pParentNode->left = pGrandNode;
+    pGrandNode->right = pParentNode;
+
+    pParentNode->parent = pGrandNode->parent;
+    if(AVLIsParentLeft(pGrandNode))
+    {
+        pGrandNode->parent->left = pParentNode;
+    }
+    else if(AVLIsParentRight(pGrandNode))
+    {
+        pGrandNode->parent->right = pParentNode;
+    }
+    else
+    {
+        /* 根节点 */
+        pTree->root = pParentNode;
+    }
+
+    if(pChildNode != NULL)
+    {
+        pChildNode->parent = pGrandNode;
+    }
+
+    /* 更新高度*/
+    AVLNodeUpdateHeight(pGrandNode);
+    AVLNodeUpdateHeight(pParentNode);
+    
+}
+/* 右左平衡 */
+static int AVLRightLeftBalance(AVLNode* pGrandNode, BalanceBinarySearchTree* pTree)
 {
 
 }
