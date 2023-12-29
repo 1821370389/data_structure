@@ -15,6 +15,10 @@ enum STATUS_CODE
     UNDERFLOW = -4,
 };
 
+/* 宏定义 */
+#define true 1
+#define false 0
+
 /* 宏函数 */
 /* 检测分配空间是否成功 */
 #define CHECK_MALLOC_ERROR(ptr)                 \
@@ -70,6 +74,20 @@ static int AVLDeleteNode(AVLNode* pNode, BalanceBinarySearchTree* pTree);
 /* 平衡二叉搜索树添加节点后... */
 static int AVLAddNodeAfter(AVLNode* pNode, BalanceBinarySearchTree* pTree);
 
+/* 计算节点的平衡因子 */
+static int AVLGetBalanceFactor(AVLNode* node);
+
+/* 判断节点是否平衡 */
+static int AVLIsBalance(AVLNode* node);
+
+/* 更新节点高度 */
+static int AVLNodeUpdateHeight(AVLNode*pNode);
+
+/* 比较两数返回最大值 */
+static int Max(int a, int b);
+
+/* 调整平衡 */
+static int AVLBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree);
 
 
 /* 平衡二叉树搜索树初始化 */
@@ -562,10 +580,91 @@ static int AVLDeleteNode(AVLNode* pNode, BalanceBinarySearchTree* pTree)
 }
 
 /* 平衡二叉搜索树添加节点后... */
+/* 新添加的节点一定是叶子节点 */
 static int AVLAddNodeAfter(AVLNode* pNode, BalanceBinarySearchTree* pTree)
 {
-    /* 更新节点高度 */
-    AVLUpdateHeight(pNode);
-    /* 调整平衡 */
-    AVLBalance(pNode, pTree);
+    while(pNode->parent != NULL)
+    {
+        pNode = pNode->parent;
+        /* 函数到这里树一定不止油管节点 */
+        if(AVLIsBalance(pNode))
+        {
+            /* 更新节点高度 */
+            AVLNodeUpdateHeight(pNode);
+        }
+        else
+        {
+            /* 此处是最低的不平衡节点 */
+            /* 调整平衡 */
+            AVLBalance(pNode, pTree);
+            /* 调整完最低不平衡节点，树就恢复平衡了 */
+            break;
+        }
+    }
+    
+}
+
+/* 计算节点的平衡因子 */
+static int AVLGetBalanceFactor(AVLNode* node)
+{
+    /* 左子树的高度 */
+    int leftHeight = node->left == NULL ? 0 : node->left->height;
+    /* 右子树的高度 */
+    int rightHeight = node->right == NULL ? 0 : node->right->height;
+    return leftHeight - rightHeight;
+}
+
+/* 判断节点是否平衡 */
+static int AVLIsBalance(AVLNode* pNode)
+{
+    #if 0 
+    return (AVLGetBalanceFactor(pNode)) <= 1;
+    #else
+    if(abs(AVLGetBalanceFactor(pNode)) <= 1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+    #endif
+}
+
+/* 更新节点高度 */
+static int AVLNodeUpdateHeight(AVLNode*pNode)
+{
+    #if 0
+    if(AVLGetBalanceFactor(pNode)>0)
+    {
+        pNode->height = (pNode->left == NULL ? 0 : pNode->left->height) + 1;
+    }
+    else
+    {
+        pNode->height = pNode->right == NULL ? 0 : pNode->right->height + 1;
+    }
+    #else
+    pNode->height = Max((pNode->left == NULL ? 0 : pNode->left->height),
+    (pNode->right == NULL ? 0 : pNode->right->height)) + 1;
+    #endif
+    return SUCCESS;
+}
+
+/* 比较两数返回最大值 */
+static int Max(int a, int b)
+{
+    if(a > b)
+    {
+        return a;
+    }
+    else
+    {
+        return b;
+    }
+}
+
+/* 调整平衡 */
+static int AVLBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree)
+{
+    
 }
