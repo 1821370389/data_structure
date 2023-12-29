@@ -846,6 +846,36 @@ static int AVLRightLeftBalance(AVLNode* pGrandNode, BalanceBinarySearchTree* pTr
 
 }
 
+/* 提取旋转时的公共代码  */
+static int AVLRotate(BalanceBinarySearchTree* pTree,AVLNode* pChildNode, AVLNode* pParentNode, AVLNode* pGrandNode )
+{
+    pParentNode->parent = pGrandNode->parent;
+    if(AVLIsParentLeft(pGrandNode))
+    {
+        pGrandNode->parent->left = pParentNode;
+    }
+    else if(AVLIsParentRight(pGrandNode))
+    {
+        pGrandNode->parent->right = pParentNode;
+    }
+    else
+    {
+        /* 根节点 */
+        pTree->root = pParentNode;
+    }
+
+    if(pChildNode != NULL)
+    {
+        pChildNode->parent = pGrandNode;
+    }
+
+    /* 更新高度*/
+    AVLNodeUpdateHeight(pGrandNode);
+    AVLNodeUpdateHeight(pParentNode);
+
+    return SUCCESS;
+}
+
 /* 返回更高的子节点 */
 static AVLNode* AVLGetHighestNode(AVLNode* pNode)
 {
