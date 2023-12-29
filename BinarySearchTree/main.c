@@ -36,6 +36,11 @@ int main()
     BSTGetSize(tree, &size);
     printf("size = %d\n", size);
     
+    /* 层序遍历 */
+    printf("层序遍历：\n");
+    BSTLevelOrder(tree);
+    printf("\n");
+    
     /* 前序遍历 */
     printf("前序遍历：\n");
     BSTPreOrder(tree);
@@ -46,8 +51,13 @@ int main()
     BSTInOrder(tree);
     printf("\n");
 
+    /* 获取前驱节点数据 */
+    int data = 38;
+    int *preData = NULL;
+    BSTGetPreData(tree, (void*)&data, (void**)&preData);
+    printf("%d的前驱节点 %d\n", data, *preData);
     /* 删除 */
-    BSTDelete(tree, &arr[0]);
+    BSTDelete(tree, &arr[4]);
     /* 中序遍历 */
     printf("中序遍历：\n");
     BSTInOrder(tree);
@@ -58,10 +68,6 @@ int main()
     BSTPostOrder(tree);
     printf("\n");
 
-    /* 层序遍历 */
-    printf("层序遍历：\n");
-    BSTLevelOrder(tree);
-    printf("\n");
 
     /* 获取高度 */
     int height = 0;
@@ -70,7 +76,7 @@ int main()
 
 
     /* 判断是否包含某数据 */
-    int data = 8;
+    data = 8;
     printf("是否包含 %d :%s\n", data, (BSTIsContains(tree, (void*)&data)) ?"是":"否");
     data = 55;
     printf("是否包含 %d :%s\n", data, (BSTIsContains(tree, (void*)&data)) ?"是":"否");

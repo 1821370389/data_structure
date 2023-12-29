@@ -62,4 +62,7 @@ int BSTDestroy(BinarySearchTree* pTree);
 /* 二叉搜索树的节点删除 */
 int BSTDelete(BinarySearchTree* pTree, ELEMENTTYPE data);
 
+/* 返回前置节点的数据 */
+int BSTGetPreData(BinarySearchTree* pTree, ELEMENTTYPE data, ELEMENTTYPE* pPreNode);
+
 #endif // !__BINARY_SEARCH_TREE_H__

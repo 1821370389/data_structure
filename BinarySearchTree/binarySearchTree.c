@@ -313,6 +313,24 @@ int BSTDelete(BinarySearchTree* pTree, ELEMENTTYPE data)
     return BSTDeleteNode(BSTGetNode(pTree, data), pTree);
 }
 
+/* 返回前置节点的数据 */
+int BSTGetPreData(BinarySearchTree* pTree, ELEMENTTYPE data, ELEMENTTYPE* pPreNode)
+{
+    /* 判空 */
+    CHECK_MALLOC_ERROR(pTree);
+    BSTNode* travelNode = BSTGetNode(pTree, data);
+    if(travelNode == NULL)
+    {
+        return NULL_PTR;
+    }
+    BSTNode* preNode = BSTGetPreNode(travelNode);
+    if(preNode != NULL)
+    {
+        *pPreNode = preNode->data;
+    }
+    return SUCCESS;
+}
+
 
 
 /* 创建节点 */
@@ -457,7 +475,7 @@ static BSTNode* BSTGetPreNode(BSTNode* node)
 
         while(pNode->parent != NULL)
         {
-            if(pNode->parent->left == pNode)
+            if(pNode->parent->right == pNode)
             {
                 return pNode->parent;
             }
@@ -467,7 +485,7 @@ static BSTNode* BSTGetPreNode(BSTNode* node)
         
     }
     #else
-    while(node->parent != NULL && node->parent->left != node)
+    while(node->parent != NULL && node->parent->left == node)
     {
         node = node->parent;
     }
@@ -495,7 +513,7 @@ static BSTNode* BSTGetNextNode(BSTNode* node)
         pNode = node;
         while(pNode != NULL)
         {
-            if(pNode->parent->right == pNode)
+            if(pNode->parent->left == pNode)
             {
                 return pNode->parent;
             }
@@ -504,7 +522,7 @@ static BSTNode* BSTGetNextNode(BSTNode* node)
         return NULL;
     }
     #else
-    while(node->parent != NULL && node->parent->right != node)
+    while(node->parent != NULL && node->parent->right == node)
     {
         node = node->parent;
     }
@@ -536,20 +554,21 @@ static int BSTDeleteNode(BSTNode* pNode, BinarySearchTree* pTree)
             /* 删除根节点 */
             pTree->root = pChildNode;
         }
-
-    }
-    else
-    {
-        if(pNode->parent->left == pNode)
-        {
-            pNode->parent->left = pChildNode;
-        }
         else
         {
-            pNode->parent->right = pChildNode;
+            if(pNode->parent->left == pNode)
+            {
+                pNode->parent->left = pChildNode;
+            }
+            else
+            {
+                pNode->parent->right = pChildNode;
+            }
         }
     }
+    
     FREE_NODE(pNode);
     pTree->size--;
     return SUCCESS;
 }
+
