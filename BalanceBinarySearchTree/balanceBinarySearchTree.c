@@ -726,14 +726,14 @@ static int AVLBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree)
 
     AVLNode* pParentNode = AVLGetHighestNode(pNode);
     AVLNode* pChildNode = AVLGetHighestNode(pNode);
-    if(pParentNode == pNode->left)
+    if(AVLIsParentLeft(pParentNode))
     {
         /* 左平衡 */
-        if(pChildNode == pParentNode->left)
+        if(AVLIsParentLeft(pChildNode))
         {
             /* 左左 */
         }
-        else
+        else 
         {
             /* 左右 */
         }
@@ -741,7 +741,7 @@ static int AVLBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree)
     else
     {
         /* 右平衡 */
-        if(pChildNode == pParentNode->right)
+        if(AVLIsParentRight(pChildNode))
         {
             /* 右右 */
         }
@@ -769,29 +769,40 @@ static int AVLRightRotate(AVLNode* pNode, BalanceBinarySearchTree* pTree)
 }
 
 /* 返回更高的子节点 */
-static AVLNode* AVLGetHighestNode(AVLNode* node)
+static AVLNode* AVLGetHighestNode(AVLNode* pNode)
 {
     /* 左子树的高度 */
-    int leftHeight = node->left == NULL ? 0 : node->left->height;
+    int leftHeight = pNode->left == NULL ? 0 : pNode->left->height;
     /* 右子树的高度 */
-    int rightHeight = node->right == NULL ? 0 : node->right->height;
+    int rightHeight = pNode->right == NULL ? 0 : pNode->right->height;
     if(leftHeight > rightHeight)
     {
-        return node->left;
+        return pNode->left;
     }
     else if(leftHeight < rightHeight)
     {
-        return node->right;
+        return pNode->right;
     }
     else
     {
-        if(node->parent != NULL && node->parent->left == node)
+        if(pNode->parent != NULL && pNode->parent->left == pNode)
         {
-            return node->left;
+            return pNode->left;
         }
         else
         {
-            return node->right;
+            return pNode->right;
         }
     }
+}
+
+/* 判断当前节点是否父节点的左节点 */
+static int AVLIsParentLeft(AVLNode* pNode)
+{
+    return pNode->parent != NULL && pNode->parent->left == pNode;
+}
+/* 判断当前节点是否父节点的右节点 */
+static int AVLIsParentRight(AVLNode* pNode)
+{
+    return pNode->parent != NULL && pNode->parent->right == pNode;
 }
