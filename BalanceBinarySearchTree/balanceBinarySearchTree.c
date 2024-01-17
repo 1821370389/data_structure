@@ -90,9 +90,9 @@ static int AVLBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree);
 /* 左左平衡 */
 static int AVLLeftLeftBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree);
 /* 左右平衡 */
-static int AVLLeftRightBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree);
+static int AVLLeftRightBalance(AVLNode* pParentNode,AVLNode* pChildNode, BalanceBinarySearchTree* pTree);
 /* 右左平衡 */
-static int AVLRightLeftBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree);
+static int AVLRightLeftBalance(AVLNode* pParentNode,AVLNode* pChildNode, BalanceBinarySearchTree* pTree);
 /* 右右平衡 */
 static int AVLRightRightBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree);
 /* LLRR旋转的公共部分*/
@@ -603,9 +603,8 @@ static int AVLDeleteNode(AVLNode* pNode, BalanceBinarySearchTree* pTree)
 /* 新添加的节点一定是叶子节点 */
 static int AVLAddNodeAfter(AVLNode* pNode, BalanceBinarySearchTree* pTree)
 {
-    while(pNode->parent != NULL)
+    while((pNode = pNode->parent) != NULL)
     {
-        pNode = pNode->parent;
         /* 函数到这里树一定不止油管节点 */
         if(AVLIsBalance(pNode))
         {
@@ -621,6 +620,7 @@ static int AVLAddNodeAfter(AVLNode* pNode, BalanceBinarySearchTree* pTree)
             break;
         }
     }
+    return SUCCESS;
     
 }
 
@@ -628,7 +628,19 @@ static int AVLAddNodeAfter(AVLNode* pNode, BalanceBinarySearchTree* pTree)
 /* 删除节点后可能会影响树的平衡 */
 static int AVLDeleteNodeAfter(AVLNode* pNode, BalanceBinarySearchTree* pTree)
 {
-
+    while((pNode = pNode->parent) != NULL)
+    {
+        if(AVLIsBalance(pNode))
+        {
+            AVLNodeUpdateHeight(pNode);
+        }
+        else
+        {
+            /* 此处是最低的不平衡节点 */
+            AVLBalance(pNode, pTree);
+        }
+    }
+    return SUCCESS;
 }
 
 /* 计算节点的平衡因子 */
@@ -694,92 +706,45 @@ static int Max(int a, int b)
 static int AVLBalance(AVLNode* pNode, BalanceBinarySearchTree* pTree)
 {
     /* LL LR RL RR */
-#if 0
-    int balanceFactor = AVLGetBalanceFactor(pNode);
-    if(balanceFactor > 1)
-    {
-        /* 左子树高度大于右子树高度 */
-        if(AVLGetBalanceFactor(pNode->left) > 0)
-        {
-            /* 左左平衡 */
-            AVLLeftLeftBalance(pNode, pTree);
-            /* 更新节点高度 */
-            AVLNodeUpdateHeight(pNode);
-            return SUCCESS;
-        }
-        else
-        {
-            /* 左右平衡 */
-            AVLLeftRightBalance(pNode, pTree);
-            /* 更新节点高度 */
-            AVLNodeUpdateHeight(pNode);
-            return SUCCESS;
-        }
-    }
-    else if(balanceFactor < -1)
-    {
-        /* 右子树高度大于左子树高度 */
-        if(AVLGetBalanceFactor(pNode->right) < 0)
-        {
-            /* 右右平衡 */
-            AVLRightRightBalance(pNode, pTree);
-            /* 更新节点高度 */
-            AVLNodeUpdateHeight(pNode);
-            return SUCCESS;
-        }
-        else
-        {
-            /* 右左平衡 */
-            AVLRightLeftBalance(pNode, pTree);
-            /* 更新节点高度 */
-            AVLNodeUpdateHeight(pNode);
-            return SUCCESS;
-        }
-    }
-    else
-    {
-        /* 平衡 */
-        AVLNodeUpdateHeight(pNode);
-        return SUCCESS;
-    }
-#else
 
     AVLNode* pParentNode = AVLGetHighestNode(pNode);
     AVLNode* pChildNode = AVLGetHighestNode(pParentNode);
     if(AVLIsParentLeft(pParentNode))
     {
-        /* 左平衡 */
+        /* L */
         if(AVLIsParentLeft(pChildNode))
         {
-            /* 左左 */
+            /* LL */
             AVLLeftLeftBalance(pParentNode,pTree);
-            AVLNodeUpdateHeight(pParentNode);
         }
         else 
         {
-            /* 左右 */
-            AVLLeftRightBalance(pParentNode,pTree);
+            /* LR */
+            AVLLeftRightBalance(pParentNode,pChildNode,pTree);
         }
     }
     else
     {
-        /* 右平衡 */
+        /* R */
         if(AVLIsParentRight(pChildNode))
         {
-            /* 右右 */
+            /* RR */
+            AVLRightRightBalance(pParentNode,pTree);
         }
         else
         {
-            /* 右左 */
+            /* RL */
+            AVLRightLeftBalance(pParentNode,pChildNode,pTree);
         }
     }
-#endif
+    
+
     return SUCCESS;
 
 
 }
 
-/* 左左平衡 */
+/* 左左平衡 右旋 */
 static int AVLLeftLeftBalance(AVLNode* pGrandNode, BalanceBinarySearchTree* pTree)
 {
     AVLNode* pParentNode = pGrandNode->left;
@@ -787,65 +752,20 @@ static int AVLLeftLeftBalance(AVLNode* pGrandNode, BalanceBinarySearchTree* pTre
 
     pGrandNode->left = pChildNode;
     pParentNode->right = pGrandNode;
-#if 0
-    pParentNode->parent = pGrandNode->parent;
-    if(AVLIsParentLeft(pGrandNode))
-    {
-        pGrandNode->parent->left = pParentNode;
-    }
-    else if(AVLIsParentRight(pGrandNode))
-    {
-        pGrandNode->parent->right = pParentNode;
-    }
-    else
-    {
-        /* 根节点 */
-        pTree->root = pParentNode;
-    }
 
-    if(pChildNode != NULL)
-    {
-        pChildNode->parent = pGrandNode;
-    }
-
-    /* 更新高度*/
-    AVLNodeUpdateHeight(pGrandNode);
-    AVLNodeUpdateHeight(pParentNode);
-#else
     AVLRotate(pTree, pChildNode, pParentNode, pGrandNode);
-#endif
+
 }
 /* 左右平衡 */
-static int AVLLeftRightBalance(AVLNode* pGrandNode, BalanceBinarySearchTree* pTree)
+static int AVLLeftRightBalance(AVLNode* pParentNode,AVLNode* pChildNode, BalanceBinarySearchTree* pTree)
 {
     /* 先左旋再右旋*/
-    AVLNode* pParentNode = pGrandNode->left;
-    AVLNode* pChildNode = pParentNode->right;
-    AVLNode* pChildLeftNode = pChildNode->left;
-    AVLNode* pChildRightNode = pChildNode->right;
-    pChildNode->left = pParentNode;
-    pChildNode->right = pGrandNode;
-    pParentNode->right = pChildLeftNode;
-    pGrandNode->left = pChildRightNode;
-    pParentNode->parent = pChildNode;
-    pGrandNode->parent = pChildNode;
-    if(pChildLeftNode != NULL)
-    {
-        pChildLeftNode->parent = pParentNode;
-        AVLNodeUpdateHeight(pChildLeftNode);
-        AVLNodeUpdateHeight(pParentNode);
-        AVLNodeUpdateHeight(pGrandNode);
-        AVLNodeUpdateHeight(pChildNode);
-        return SUCCESS;
-    }
-    else
-    {
-        pTree->root = pChildNode;
-        AVLNodeUpdateHeight(pChildNode);
-        return SUCCESS;
-    }
+    AVLRightRightBalance(pParentNode,pTree);
+    AVLLeftLeftBalance(pChildNode,pTree);
+    return SUCCESS;
+    
 }
-/* 右右平衡 */
+/* 右右平衡 左旋 */
 static int AVLRightRightBalance(AVLNode* pGrandNode, BalanceBinarySearchTree* pTree)
 {
     AVLNode* pParentNode = pGrandNode->right;
@@ -854,63 +774,18 @@ static int AVLRightRightBalance(AVLNode* pGrandNode, BalanceBinarySearchTree* pT
     pGrandNode->right = pChildNode;
     pParentNode->left = pGrandNode;
 
-#if 0
-    pParentNode->parent = pGrandNode->parent;
-    if(AVLIsParentLeft(pGrandNode))
-    {
-        pGrandNode->parent->left = pParentNode;
-    }
-    else if(AVLIsParentRight(pGrandNode))
-    {
-        pGrandNode->parent->right = pParentNode;
-    }
-    else
-    {
-        /* 根节点 */
-        pTree->root = pParentNode;
-    }
 
-    if(pChildNode != NULL)
-    {
-        pChildNode->parent = pGrandNode;
-    }
-
-    /* 更新高度*/
-    AVLNodeUpdateHeight(pGrandNode);
-    AVLNodeUpdateHeight(pParentNode);
-#else
     AVLRotate(pTree, pChildNode, pParentNode, pGrandNode);
-#endif
+
     
 }
 /* 右左平衡 */
-static int AVLRightLeftBalance(AVLNode* pGrandNode, BalanceBinarySearchTree* pTree)
+static int AVLRightLeftBalance(AVLNode* pParentNode,AVLNode* pChildNode, BalanceBinarySearchTree* pTree)
 {
-    AVLNode* pParentNode = pGrandNode->right;
-    AVLNode* pChildNode = pParentNode->left;
-    AVLNode* pChildLeftNode = pChildNode->left;
-    AVLNode* pChildRightNode = pChildNode->right;
-    pChildNode->left = pGrandNode;
-    pChildNode->right = pParentNode;
-    pGrandNode->right = pChildLeftNode;
-    pParentNode->left = pChildRightNode;
-    pParentNode->parent = pChildNode;
-    pGrandNode->parent = pChildNode;
-    if(pChildRightNode != NULL)
-    {
-        pChildRightNode->parent = pParentNode;
-        AVLNodeUpdateHeight(pChildRightNode);
-        AVLNodeUpdateHeight(pParentNode);
-        AVLNodeUpdateHeight(pGrandNode);
-        AVLNodeUpdateHeight(pChildNode);
-        return SUCCESS;
-    }
-    else
-    {
-        pTree->root = pChildNode;
-        AVLNodeUpdateHeight(pChildNode);
-        return SUCCESS;
-    }
+    /* 先右旋再左旋 */
+    AVLLeftLeftBalance(pParentNode,pTree);
+    AVLRightRightBalance(pChildNode,pTree);
+    return SUCCESS;
 }
 
 /* LLRR旋转的公共部分*/

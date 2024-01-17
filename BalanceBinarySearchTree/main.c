@@ -47,11 +47,11 @@ int main()
     printf("\n");
 
     /* 删除 */
-    AVLDelete(tree, &arr[0]);
-    /* 中序遍历 */
-    printf("中序遍历：\n");
-    AVLInOrder(tree);
-    printf("\n");
+    // AVLDelete(tree, &arr[0]);
+    // /* 中序遍历 */
+    // printf("中序遍历：\n");
+    // AVLInOrder(tree);
+    // printf("\n");
 
     /* 后序遍历 */
     printf("后序遍历：\n");

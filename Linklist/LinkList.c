@@ -258,6 +258,7 @@ int LinkListDestroy(LinkList *pList)
     //     pList->head = NULL;
     // }
     FREE_NODE(pList->head);
+    FREE_NODE(pList);
 }
 
 /* 链表遍历 */
