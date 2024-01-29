@@ -18,6 +18,7 @@ enum STATUS_CODE
 
 };
 
+/* 哈希表的初始化 */
 int hashTableInit(HashTable **hashTable)
 {
     HashTable * hash = (HashTable *)malloc(sizeof(HashTable));
@@ -48,5 +49,24 @@ int hashTableInit(HashTable **hashTable)
 
     return SUCCESS;
 
+    return 0;
+}
+
+/* 哈希表 插入<key,value> */
+int hashTableInsert(HashTable *hashTable, int key, int value)
+{
+    int slotIndex = key % hashTable->slotNums;
+    return 0;
+}
+
+/* 哈希表 删除key */
+int hashTableDelete(HashTable* hashTable, int key)
+{
+    return 0;
+}
+
+/* 哈希表 根据key获取value */
+int hashTableGetValueByKey(HashTable* hashTable, int key)
+{
     return 0;
 }
